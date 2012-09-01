@@ -29,22 +29,31 @@ class Knn {
   def examples
   Knn( examples ) { this.examples = examples }
   
-  def classify( data_point ) {
+  def classify( data_point, k=7 ) {
     def distances = []
+    def histogram = [:].withDefault { 0 }
+    
     examples.each {
-      distances << distance( data_point, it)
+      distances << [ euclidean_distance( data_point, it ), it['qqq'] ] 
     }
-    println distances.sort()[0..7]
+    
+    distances.sort()[0..k].each { 
+      histogram[ it.last() ] += inverse_weight( it.first() ) 
+    }
+   
+    histogram.sort { k1, k2 -> k1.value <=> k2.value }*.key.last()
   }
   
-  def distance( point_1, point_2 ) {
+  def euclidean_distance( point_1, point_2 ) {
     def sum_sq = 0
     point_1.each {
-      if ( it.key == 'qqq' ) { return } // could pre-filter this
+      if ( it.key == 'qqq' ) { return } 
       sum_sq += ( it.value - point_2[it.key] ) ** 2
     }
     Math.sqrt(sum_sq)
   }
+  
+  def inverse_weight(distance) { 1.0 / ( distance + 0.1 ) }
 }
 
 knn = new Knn( ndx10_3days )
