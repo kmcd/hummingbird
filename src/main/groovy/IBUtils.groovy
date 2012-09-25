@@ -1,0 +1,12 @@
+class IBUtils {
+  static void forEachNDX10(Closure perform) {
+    def gateway = new Gateway(client_id: 2)
+    gateway.connect()
+
+    def i = 0
+
+    new File("../resources/qqq_holdings.csv").splitEachLine(",") { fields ->
+      perform.call(gateway, i++, fields[0])
+    }
+  }
+}
