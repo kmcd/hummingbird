@@ -9,9 +9,11 @@ class Gateway extends IbGateway {
   def stocks = [:]
 
   def data = [:]
-  def marketData = new MarketData()
+  def marketData = new ObserverMarketData()
 
   def connect() {
+    marketData.notifier.addObserver(new Signal())
+
     client_socket.eConnect('localhost', port, client_id)
   }
 

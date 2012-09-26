@@ -1,9 +1,9 @@
 class ObserverMarketData {
   def notifier = new MarketDataNotifier()
-  def data = []
+  def data = new MarketData()
 
-  def add(tick) {
-    data << tick
+  def add(stock, price) {
+    data.add(stock, price)
     notifier.notifyObservers(data)
   }
 
@@ -26,7 +26,7 @@ class Signal implements Observer {
 
   public void update(Observable observed, Object data) {
     signals << data
-    println signals
+    log.info signals
   }
 
   private class SignalNotifier extends Observable {
