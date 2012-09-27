@@ -51,8 +51,6 @@ class ObservablePosition {
     if (positions.size() > 1)
       positions.remove(0)
 
-    println positions
-
     notifier.notifyObservers()
   }
 
@@ -68,7 +66,7 @@ class ObservablePosition {
   private class PositionNotifier extends Observable {
     public void notifyObservers() {
       setChanged()
-      super.notifyObservers()
+      super.notifyObservers(positions.peek())
     }
   }
 }
@@ -84,7 +82,9 @@ class Order {
   }
 
   private class OrderObserver implements Observer {
-    public void update(Observable ob, Object a) {}
+    public void update(Observable ob, Object a) {
+      IBUtils.gateway.client_socket.placeOrder(System.currentTimeMillis() as int, new Stock('QQQ').contract, )
+    }
   }
 
   private class OrderNotifier extends Observable {
