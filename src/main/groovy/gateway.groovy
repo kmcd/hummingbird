@@ -88,12 +88,6 @@ class Gateway extends IbGateway {
 
   void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap,
                    int count) {
-    println("Gateway.realtimeBar");
-    // currently only 5 second bars are supported
-    // see http://www.interactivebrokers.com/en/software/api/apiguide/java/reqrealtimebars.htm
-    if (time - (lastTime[reqId] ?: 0) < 15) {
-      return
-    }
     lastTime[reqId] = time
 
     def symbol = stocks[reqId].symbol()
@@ -102,8 +96,7 @@ class Gateway extends IbGateway {
   }
 
   void updateAccountValue(String key, String value, String currency, String accountName) {
-    System.out.println("Gateway.updateAccountValue - $key - $value - $currency - $accountName");
-
-    IBUtils.setBalance value
+    if (key.equals('CashBalance'))
+      IBUtils.setBalance(value as Float)
   }
 }

@@ -2,21 +2,26 @@ class Signal implements Observer {
   def signals = new Stack()
   def notifier = new SignalNotifier()
   Random rand = new Random()
+  final int CHANCE = 100 * 250 / (391.0 * 12)
+  def type
 
   Signal() {
-    notifier.addObserver(new ObserverPosition().observer)
+    notifier.addObserver(new ObservablePosition().observer)
   }
 
   def add(signal) {
-    def nextInt = rand.nextInt(100)
-//    if (nextInt < 16) {
-      signals << signal
-      notifier.notifyObservers()
-//    }
+    signals << (signal ? 'long' : 'short')
+
+    println signals
+
+    notifier.notifyObservers()
   }
 
   public void update(Observable observed, Object data) {
-    add(data)
+    def nextInt = rand.nextInt(100)
+//    if (nextInt < CHANCE) {
+      add(type = !type)
+//    }
   }
 
   private class SignalNotifier extends Observable {
@@ -27,26 +32,36 @@ class Signal implements Observer {
   }
 }
 
-class ObserverPosition {
+class ObservablePosition {
   def positions = new Stack()
   def notifier = new PositionNotifier()
   def observer = new PositionObserver()
 
+  ObservablePosition() {
+    requestBalance()
+    notifier.addObserver(new Order().observer)
+  }
+
+  private def requestBalance() {
+    IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
+  }
+
   def add(position) {
     positions << position
-    while (positions.size() > 1)
+    if (positions.size() > 1)
       positions.remove(0)
+
+    println positions
+
     notifier.notifyObservers()
   }
 
   private class PositionObserver implements Observer {
     public void update(Observable ob, Object data) {
-      System.out.println("ObserverPosition\$PositionObserver.update");
-      add(data)
+      requestBalance()
 
-      IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
-
-      println "${IBUtils.getBalance() / 3}"
+      if (IBUtils.getBalance())
+        add([Math.floor(IBUtils.getBalance() * 30) / 100, data == 'long' ? 'buy' : 'sell'])
     }
   }
 
