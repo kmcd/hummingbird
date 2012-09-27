@@ -5,12 +5,19 @@ class MarketData {
   final static MAX_SIZE = 4 // (15 secs slots)
   final static MAX_COMPONENTS = 10
   private deque = [] as ArrayDeque
+  def notifier = new MarketDataNotifier()
 
   def add(stock, price) {
     if (queue_full()) {
-      log.info "Deque is full. Removing ${deque.removeFirst()}"
+      deque.removeFirst()
     }
-    if (component_slot_available()) { add_component(stock, price); return }
+    if (component_slot_available()) {
+      add_component(stock, price);
+      if (deque.peekLast().size() == MAX_COMPONENTS)
+        notifier.notifyObservers(deque.peekLast())
+
+      return
+    }
     deque.add(["${stock}": price])
   }
 
@@ -30,5 +37,10 @@ class MarketData {
     return "MarketData${deque}"
   }
 
-  // notify observers when Q full & all n components available
+  private class MarketDataNotifier extends Observable {
+    public void notifyObservers(data) {
+      setChanged()
+      super.notifyObservers(data)
+    }
+  }
 }

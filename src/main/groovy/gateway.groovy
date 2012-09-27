@@ -9,14 +9,14 @@ class Gateway extends IbGateway {
   def stocks = [:]
 
   def data = [:]
-  def marketData = new ObserverMarketData()
+  def marketData = new MarketData()
   def lastTime = [:]
 
   def connect() {
     marketData.notifier.addObserver(new Signal())
 
-    client_socket.eConnect('localhost', port, client_id)
-  }
+      client_socket.eConnect('localhost', port, client_id)
+    }
 
   def disconnect() { if (client_socket.isConnected()) client_socket.eDisconnect() }
 
@@ -88,6 +88,7 @@ class Gateway extends IbGateway {
 
   void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap,
                    int count) {
+    println("Gateway.realtimeBar");
     // currently only 5 second bars are supported
     // see http://www.interactivebrokers.com/en/software/api/apiguide/java/reqrealtimebars.htm
     if (time - (lastTime[reqId] ?: 0) < 15) {
@@ -98,5 +99,11 @@ class Gateway extends IbGateway {
     def symbol = stocks[reqId].symbol()
 
     marketData.add(symbol, close)
+  }
+
+  void updateAccountValue(String key, String value, String currency, String accountName) {
+    System.out.println("Gateway.updateAccountValue - $key - $value - $currency - $accountName");
+
+    IBUtils.setBalance value
   }
 }

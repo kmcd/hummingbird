@@ -1,54 +1,53 @@
-class ObserverMarketData {
-  def notifier = new MarketDataNotifier()
-  def data = new MarketData()
-
-  def add(stock, price) {
-    data.add(stock, price)
-    notifier.notifyObservers(data)
-  }
-
-  private class MarketDataNotifier extends Observable {
-    public void notifyObservers(data) {
-      setChanged()
-      super.notifyObservers(data)
-    }
-  }
-}
-
 class Signal implements Observer {
-  def signals = [] // as Deque
+  def signals = new Stack()
   def notifier = new SignalNotifier()
+  Random rand = new Random()
+
+  Signal() {
+    notifier.addObserver(new ObserverPosition().observer)
+  }
 
   def add(signal) {
-    signals << signal
-    notifier.notifyObservers()
+    def nextInt = rand.nextInt(100)
+//    if (nextInt < 16) {
+      signals << signal
+      notifier.notifyObservers()
+//    }
   }
 
   public void update(Observable observed, Object data) {
-    signals << data
-    log.info signals
+    add(data)
   }
 
   private class SignalNotifier extends Observable {
     public void notifyObservers() {
       setChanged()
-      super.notifyObservers()
+      super.notifyObservers(signals.peek())
     }
   }
 }
 
 class ObserverPosition {
-  def positions = []
+  def positions = new Stack()
   def notifier = new PositionNotifier()
   def observer = new PositionObserver()
 
   def add(position) {
     positions << position
+    while (positions.size() > 1)
+      positions.remove(0)
     notifier.notifyObservers()
   }
 
   private class PositionObserver implements Observer {
-    public void update(Observable ob, Object a) {}
+    public void update(Observable ob, Object data) {
+      System.out.println("ObserverPosition\$PositionObserver.update");
+      add(data)
+
+      IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
+
+      println "${IBUtils.getBalance() / 3}"
+    }
   }
 
   private class PositionNotifier extends Observable {
