@@ -99,4 +99,17 @@ class Gateway extends IbGateway {
     if (key.equals('CashBalance'))
       IBUtils.setBalance(value as Float)
   }
+
+  void error(Exception e) {
+    print "[ERROR] "
+    e.printStackTrace()
+  }
+
+  void error(String str) {
+    println "[ERROR] $str"
+  }
+
+  void error(int id, int errorCode, String errorMsg) {
+    println "[ERROR] id: $id, code: $errorCode, message: $errorMsg"
+  }
 }
