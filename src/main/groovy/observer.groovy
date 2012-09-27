@@ -1,3 +1,5 @@
+import com.ib.client.Contract
+
 class Signal implements Observer {
   def signals = new Stack()
   def notifier = new SignalNotifier()
@@ -10,7 +12,7 @@ class Signal implements Observer {
   }
 
   def add(signal) {
-    signals << (signal ? 'long' : 'short')
+    signals << (signal ? 'LONG' : 'SHORT')
 
     println signals
 
@@ -38,28 +40,26 @@ class ObservablePosition {
   def observer = new PositionObserver()
 
   ObservablePosition() {
-    requestBalance()
     notifier.addObserver(new Order().observer)
   }
 
-  private def requestBalance() {
-    IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
-  }
 
   def add(position) {
     positions << position
     if (positions.size() > 1)
       positions.remove(0)
 
+    println positions
+
     notifier.notifyObservers()
   }
 
   private class PositionObserver implements Observer {
     public void update(Observable ob, Object data) {
-      requestBalance()
+      IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
 
       if (IBUtils.getBalance())
-        add([Math.floor(IBUtils.getBalance() * 30) / 100, data == 'long' ? 'buy' : 'sell'])
+        add([Math.floor(IBUtils.getBalance() * 30) / 100, data == 'LONG' ? 'BUY' : 'SELL'])
     }
   }
 
@@ -82,8 +82,26 @@ class Order {
   }
 
   private class OrderObserver implements Observer {
-    public void update(Observable ob, Object a) {
-      IBUtils.gateway.client_socket.placeOrder(System.currentTimeMillis() as int, new Stock('QQQ').contract, )
+    public void update(Observable ob, Object data) {
+      def contract = new Contract()
+      contract.m_symbol = 'QQQ'
+      contract.m_exchange = "SMART"
+      contract.m_secType = "STK"
+
+      def order = new com.ib.client.Order()
+      order.m_action = 'BUY'
+      order.m_totalQuantity = 100
+      order.m_orderType = 'LMT'
+      order.m_percentOffset = 3
+
+      order.m_lmtPrice = data[0] as double
+
+      def calendar = Calendar.instance
+      calendar.add(Calendar.SECOND, 65)
+      order.m_goodTillDate = calendar.format("yyyyMMdd HH:mm:ss")
+
+
+      IBUtils.gateway.client_socket.placeOrder(System.currentTimeMillis() as int, contract, order)
     }
   }
 
