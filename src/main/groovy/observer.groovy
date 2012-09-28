@@ -83,23 +83,25 @@ class Order {
 
   private class OrderObserver implements Observer {
     public void update(Observable ob, Object data) {
+      if (!IBUtils.gateway.liveOrders.isEmpty())
+        return
+
       def contract = new Contract()
       contract.m_symbol = 'QQQ'
       contract.m_exchange = "SMART"
       contract.m_secType = "STK"
 
       def order = new com.ib.client.Order()
-      order.m_action = 'BUY'
+      order.m_action = /*'BUY'*/ data[1]
       order.m_totalQuantity = 100
       order.m_orderType = 'LMT'
       order.m_percentOffset = 3
-
+      order.m_tif = 'IOC'
       order.m_lmtPrice = data[0] as double
 
       def calendar = Calendar.instance
       calendar.add(Calendar.SECOND, 65)
       order.m_goodTillDate = calendar.format("yyyyMMdd HH:mm:ss")
-
 
       IBUtils.gateway.client_socket.placeOrder(System.currentTimeMillis() as int, contract, order)
     }

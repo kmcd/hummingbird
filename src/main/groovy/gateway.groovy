@@ -1,5 +1,9 @@
 import groovy.util.logging.Log
 import java.util.logging.Level
+import com.ib.client.Contract
+import com.ib.client.Execution
+import com.ib.client.Order
+import com.ib.client.OrderState
 
 @Log
 class Gateway extends IbGateway {
@@ -13,6 +17,8 @@ class Gateway extends IbGateway {
   def marketData = new MarketData()
   def lastTime = [:]
 
+  def liveOrders = []
+
   def connect() {
     marketData.notifier.addObserver(new Signal())
 
@@ -24,6 +30,13 @@ class Gateway extends IbGateway {
   public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId,
                           int parentId, double lastFillPrice, int clientId, String whyHeld) {
     println("Gateway.orderStatus $orderId, $status, $filled, $remaining, $avgFillPrice, $permId, $parentId, $lastFillPrice, $clientId, $whyHeld");
+
+    if (status != 'Cancelled')
+      liveOrders << String.valueOf(orderId)
+    else
+      liveOrders.remove(String.valueOf(orderId))
+
+    println "liveOrders: $liveOrders"
 
     orders[orderId] = status
   }
@@ -135,5 +148,14 @@ class Gateway extends IbGateway {
     if (errorCode in 10000..10027) return Level.SEVERE
 
     throw new Exception('Unknown code')
+  }
+
+  void execDetails(int orderId, Contract contract, Execution execution) {
+    println("+++ Gateway.execDetails +++");
+    println("$orderId - $contract - $execution");
+  }
+
+  void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
+    println("Gateway.openOrder - $orderId - $contract - ${orderState.m_status}");
   }
 }
