@@ -1,9 +1,7 @@
-import groovy.util.logging.Log
-import java.util.logging.Level
 import com.ib.client.Contract
 import com.ib.client.Execution
-import com.ib.client.Order
-import com.ib.client.OrderState
+import groovy.util.logging.Log
+import java.util.logging.Level
 
 @Log
 class Gateway extends IbGateway {
@@ -17,24 +15,30 @@ class Gateway extends IbGateway {
   def marketData = new MarketData()
   def lastTime = [:]
 
-  def liveOrders = []
+  def liveOrders = [] as Set
 
   def connect() {
-    marketData.notifier.addObserver(new Signal())
-
     client_socket.eConnect('localhost', port, client_id)
+
+    marketData.notifier.addObserver(new Signal())
   }
 
   def disconnect() { if (client_socket.isConnected()) client_socket.eDisconnect() }
 
   public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId,
                           int parentId, double lastFillPrice, int clientId, String whyHeld) {
-    println("Gateway.orderStatus $orderId, $status, $filled, $remaining, $avgFillPrice, $permId, $parentId, $lastFillPrice, $clientId, $whyHeld");
+    println("""Gateway.orderStatus - orderId:$orderId, status:$status, filled:$filled, remaining:$remaining, \
+avgFillPrice:$avgFillPrice, permId:$permId, parentId:$parentId, lastFillPrice:$lastFillPrice, clientId:$clientId, \
+whyHeld:$whyHeld""");
+    log.info("""Order status: orderId:$orderId, status:$status, filled:$filled, remaining:$remaining, \
+avgFillPrice:$avgFillPrice, permId:$permId, parentId:$parentId, lastFillPrice:$lastFillPrice, clientId:$clientId, \
+whyHeld:$whyHeld""");
 
+    def orderIdStr = "$orderId"
     if (status != 'Cancelled' && status != 'Completed')
-      liveOrders << String.valueOf(orderId)
+      liveOrders << orderIdStr
     else
-      liveOrders.remove(String.valueOf(orderId))
+      liveOrders.remove(orderIdStr)
 
     println "liveOrders: $liveOrders"
 
@@ -70,7 +74,11 @@ class Gateway extends IbGateway {
   }
 
   public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {
-    if (canAutoExecute) { Quote.create(tickerId, field, price) }
+//    if (canAutoExecute) { Quote.create(tickerId, field, price) }
+    if (field != 2)
+      return
+
+    IBUtils.ticker = price
   }
 
   public void nextValidId(int orderId) { next_order_id = orderId }
@@ -151,11 +159,10 @@ class Gateway extends IbGateway {
   }
 
   void execDetails(int orderId, Contract contract, Execution execution) {
-    println("+++ Gateway.execDetails +++");
-    println("$orderId - $contract - $execution");
-  }
-
-  void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {
-    println("Gateway.openOrder - $orderId - $contract - ${orderState.m_status}");
+    log.info("""Order execution details: orderId:$orderId, acctNumber:${execution.m_acctNumber}, \
+avgPrice:${execution.m_avgPrice}, clientId:${execution.m_clientId}, cumQty:${execution.m_cumQty}, \
+exchange:${execution.m_exchange}, execId:${execution.m_execId}, liquidation:${execution.m_liquidation}, \
+orderId:${execution.m_orderId}, orderRef:${execution.m_orderRef}, permId:${execution.m_permId}, \
+price:${execution.m_price}, shares:${execution.m_shares}, side:${execution.m_side}, time:${execution.m_time}""")
   }
 }

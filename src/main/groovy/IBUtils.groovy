@@ -1,6 +1,7 @@
 class IBUtils {
   static def gateway
   static def balance
+  static double ticker = 0
 
   static void forEachNDX10(Closure perform) {
 

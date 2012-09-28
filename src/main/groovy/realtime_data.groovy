@@ -2,5 +2,8 @@ IBUtils.forEachNDX10 { gateway, i, symbol ->
   def stock = new Stock(symbol)
   gateway.stocks[i] = stock
 
-  gateway.client_socket.reqRealTimeBars(i, stock.contract, 15, 'ASK', /*true*/ new Date().hours >= 9)
+  def calendarOpens = Calendar.instance
+  calendarOpens.set(['hourOfDay': 9, 'minute': 30, 'second': 0])
+
+  gateway.client_socket.reqRealTimeBars(i, stock.contract, 15, 'ASK', Calendar.instance.after(calendarOpens))
 }
