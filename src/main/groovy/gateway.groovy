@@ -31,7 +31,7 @@ class Gateway extends IbGateway {
                           int parentId, double lastFillPrice, int clientId, String whyHeld) {
     println("Gateway.orderStatus $orderId, $status, $filled, $remaining, $avgFillPrice, $permId, $parentId, $lastFillPrice, $clientId, $whyHeld");
 
-    if (status != 'Cancelled')
+    if (status != 'Cancelled' && status != 'Completed')
       liveOrders << String.valueOf(orderId)
     else
       liveOrders.remove(String.valueOf(orderId))
