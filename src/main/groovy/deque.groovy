@@ -2,7 +2,7 @@ import groovy.util.logging.Log
 
 @Log
 class MarketData {
-  final static MAX_SIZE = 4 // (15 secs slots)
+  final static MAX_SIZE = 12 // (5 secs slots)
   final static MAX_COMPONENTS = 10
   private deque = [] as ArrayDeque
   def notifier = new MarketDataNotifier()

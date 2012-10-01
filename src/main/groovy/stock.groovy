@@ -7,7 +7,7 @@ class Stock {
     contract.m_symbol = symbol
     contract.m_secType = "STK"
     contract.m_exchange = "SMART"
-    contract.m_primaryExch = "ARCA"
+    contract.m_primaryExch = "ARCA" // Should this not be SMART or NASDAQ?
     contract.m_currency = "USD"
   }
 

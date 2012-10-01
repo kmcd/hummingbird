@@ -4,7 +4,6 @@ class IBUtils {
   static double ticker = 0
 
   static void forEachNDX10(Closure perform) {
-
     gateway = new Gateway(client_id: 2)
     gateway.connect()
 
