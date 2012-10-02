@@ -37,7 +37,7 @@ class MarketData {
     return "MarketData${deque}"
   }
 
-  private class MarketDataNotifier extends Observable {
+  private class MarketDataNotifier extends  {
     public void notifyObservers(data) {
       setChanged()
       super.notifyObservers(data)

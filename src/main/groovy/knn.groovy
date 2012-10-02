@@ -8,16 +8,16 @@ def ndx10_minute() {
   }
 
   ['intc': Math.random() / 100,
-          'appl': Math.random() / 100,
-          'goog': Math.random() / 100,
-          'msft': Math.random() / 100,
-          'csco': Math.random() / 100,
-          'orcl': Math.random() / 100,
-          'vrzn': Math.random() / 100,
-          'qcom': Math.random() / 100,
-          'cmcsa': Math.random() / 100,
-          'amgn': Math.random() / 100,
-          'qqq': classification]
+    'appl': Math.random() / 100,
+    'goog': Math.random() / 100,
+    'msft': Math.random() / 100,
+    'csco': Math.random() / 100,
+    'orcl': Math.random() / 100,
+    'vrzn': Math.random() / 100,
+    'qcom': Math.random() / 100,
+    'cmcsa': Math.random() / 100,
+    'amgn': Math.random() / 100,
+    'qqq': classification]
 }
 
 ndx10_3days = []

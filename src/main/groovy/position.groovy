@@ -1,24 +1,22 @@
 import com.ib.client.Contract
 
-class ObservablePosition {
+class Position {
   def positions = new Stack()
   def notifier = new PositionNotifier()
   def observer = new PositionObserver()
 
-  ObservablePosition() {
+  Position() {
     notifier.addObserver(new Order().observer)
   }
 
-
   def add(position) {
     positions << position
-    if (positions.size() > 1)
-      positions.remove(0)
+    if (positions.size() > 1) positions.remove(0)
 
     notifier.notifyObservers()
   }
 
-  private class PositionObserver implements Observer {
+  class PositionObserver implements Observer {
     public void update(Observable ob, Object data) {
       IBUtils.gateway.client_socket.reqAccountUpdates(true, '')
 
@@ -27,8 +25,8 @@ class ObservablePosition {
     }
   }
 
-  private class PositionNotifier extends Observable {
-    public void notifyObservers() {
+  class PositionNotifier extends Observable {
+    def notifyObservers() {
       setChanged()
       super.notifyObservers(positions.peek())
     }

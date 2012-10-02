@@ -6,7 +6,8 @@ class IbGateway implements EWrapper {
 
   public void accountDownloadEnd(java.lang.String end) {}
 
-  public void bondContractDetails(int reqId, ContractDetails contractDetails) {}
+  public void bondContractDetails(int reqId, ContractDetails
+    contractDetails) {}
 
   public void connectionClosed() {}
 
@@ -16,7 +17,8 @@ class IbGateway implements EWrapper {
 
   public void currentTime(long time) {}
 
-  public void deltaNeutralValidation(int int_1, com.ib.client.UnderComp underComp) {}
+  public void deltaNeutralValidation(int int_1, com.ib.client.UnderComp
+    underComp) {}
 
   public void deltaNeutralValidation(undercomp) {}
 
@@ -26,13 +28,16 @@ class IbGateway implements EWrapper {
 
   public void error(int id, int errorCode, String errorMsg) {}
 
-  public void execDetails(int orderId, Contract contract, Execution execution) {}
+  public void execDetails(int orderId, Contract contract, Execution
+    execution) {}
 
   public void execDetailsEnd(int at) {}
 
   public void fundamentalData(int reqId, String data) {}
 
-  public void historicalData(int reqId, String date, double open, double high, double low, double close, int volume, int count, double WAP, boolean hasGaps) {}
+  public void historicalData(int reqId, String date, double open, double
+    high, double low, double close, int volume, int count, double WAP,
+      boolean hasGaps) {}
 
   public void managedAccounts(String accountsList) {}
 
@@ -40,31 +45,43 @@ class IbGateway implements EWrapper {
 
   public void nextValidId(int orderId) {}
 
-  void openOrder(int orderId, Contract contract, Order order, OrderState orderState) {}
+  void openOrder(int orderId, Contract contract, Order order, OrderState
+    orderState) {}
 
   public void openOrderEnd() {}
 
-  public void orderStatus(int orderId, String status, int filled, int remaining, double avgFillPrice, int permId, int parentId, double lastFillPrice, int clientId, String whyHeld) {}
+  public void orderStatus(int orderId, String status, int filled, int
+    remaining, double avgFillPrice, int permId, int parentId, double
+    lastFillPrice, int clientId, String whyHeld) {}
 
-  public void realtimeBar(int reqId, long time, double open, double high, double low, double close, long volume, double wap, int count) {}
+  public void realtimeBar(int reqId, long time, double open, double high,
+    double low, double close, long volume, double wap, int count) {}
 
   public void receiveFA(int faDataType, String xml) {}
 
-  public void scannerData(int reqId, int rank, ContractDetails contractDetails, String distance, String benchmark, String projection, String legsStr) {}
+  public void scannerData(int reqId, int rank, ContractDetails
+    contractDetails, String distance, String benchmark, String projection,
+    String legsStr) {}
 
   public void scannerDataEnd(int reqId) {}
 
   public void scannerParameters(String xml) {}
 
-  public void tickEFP(int tickerId, int tickType, double basisPoints, String formattedBasisPoints, double impliedFuture, int holdDays, String futureExpiry, double dividendImpact, double dividendsToExpiry) {}
+  public void tickEFP(int tickerId, int tickType, double basisPoints, String
+    formattedBasisPoints, double impliedFuture, int holdDays, String
+    futureExpiry, double dividendImpact, double dividendsToExpiry) {}
 
   public void tickGeneric(int tickerId, int tickType, double value) {}
 
-  public void tickOptionComputation(int tickerId, int field, double impliedVol, double delta, double modelPrice, double pvDividend) {}
+  public void tickOptionComputation(int tickerId, int field, double
+    impliedVol, double delta, double modelPrice, double pvDividend) {}
 
-  public void tickOptionComputation(int int_1, int int_2, double double1, double double2, double double3, double double4, double double5, double double6, double double7, double double8) {}
+  public void tickOptionComputation(int int_1, int int_2, double double1,
+    double double2, double double3, double double4, double double5, double
+    double6, double double7, double double8) {}
 
-  public void tickPrice(int tickerId, int field, double price, int canAutoExecute) {}
+  public void tickPrice(int tickerId, int field, double price, int
+    canAutoExecute) {}
 
   public void tickSize(int tickerId, int field, int size) {}
 
@@ -74,13 +91,19 @@ class IbGateway implements EWrapper {
 
   public void updateAccountTime(String timeStamp) {}
 
-  public void updateAccountValue(String key, String value, String currency, String accountName) {}
+  public void updateAccountValue(String key, String value, String currency,
+    String accountName) {}
 
-  public void updateMktDepth(int tickerId, int position, int operation, int side, double price, int size) {}
+  public void updateMktDepth(int tickerId, int position, int operation, int
+    side, double price, int size) {}
 
-  public void updateMktDepthL2(int tickerId, int position, String marketMaker, int operation, int side, double price, int size) {}
+  public void updateMktDepthL2(int tickerId, int position, String
+    marketMaker, int operation, int side, double price, int size) {}
 
-  public void updateNewsBulletin(int msgId, int msgType, String message, String origExchange) {}
+  public void updateNewsBulletin(int msgId, int msgType, String message,
+    String origExchange) {}
 
-  public void updatePortfolio(Contract contract, int position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {}
+  public void updatePortfolio(Contract contract, int position, double
+    marketPrice, double marketValue, double averageCost, double
+    unrealizedPNL, double realizedPNL, String accountName) {}
 }
