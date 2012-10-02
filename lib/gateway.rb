@@ -1,6 +1,3 @@
-require 'java'
-require 'ib_gateway'
-
 class Gateway < IbGateway
   attr_reader :port, :host
   @@client_id = 0

@@ -1,6 +1,3 @@
-require 'gateway'
-require 'stock'
-
 class HistoricalData < Gateway
   def initialize
     super

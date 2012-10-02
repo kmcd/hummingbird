@@ -1,5 +1,3 @@
-require 'java'
-
 import com.ib.client.Contract
 import com.ib.client.ContractDetails
 

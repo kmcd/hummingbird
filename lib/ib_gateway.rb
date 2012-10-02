@@ -1,6 +1,3 @@
-require 'java'
-require 'ib.client.jar'
-
 import com.ib.client.ContractDetails
 import com.ib.client.EClientSocket
 import com.ib.client.EWrapper
