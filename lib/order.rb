@@ -1,7 +1,5 @@
 class Order
   attr_reader :contract, :ib_id, :contract, :ib_order
-  Gateway.def_delegators :client_socket, :placeOrder, :cancelOrder,
-    :reqAllOpenOrders
   
   def self.all
     gateway = Gateway.new
@@ -40,21 +38,20 @@ end
 
 class OrderRequest < Gateway
   attr_reader :next_order_id
-  Gateway.def_delegators :client_socket, :nextValidId
     
   def next_available_id
     return next_order_id if next_order_id
     request_next_order_id
     sleep 0.5
-    gateway.disconnect
+    disconnect
     next_order_id
   end
   
   def request_next_order_id
-    nextValidId
+    client_socket.reqIds 2
   end
   
   def nextValidId(next_order_id)
-    @next_order_id = order_id
+    @next_order_id = next_order_id
   end
 end

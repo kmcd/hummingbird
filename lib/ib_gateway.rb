@@ -1,17 +1,10 @@
-import com.ib.client.ContractDetails
-import com.ib.client.EClientSocket
-import com.ib.client.EWrapper
-import com.ib.client.EWrapperMsgGenerator
-import com.ib.client.Execution
-import com.ib.client.Order
-import com.ib.client.OrderState
-import com.ib.client.UnderComp
+require 'ib.client.jar'
 
 class IbGateway
-  include EWrapper
+  include com.ib.client.EWrapper
   
   def client_socket
-    @client_socket ||= EClientSocket.new self
+    @client_socket ||= com.ib.client.EClientSocket.new self
   end
   
   java_signature 'public accountDownloadEnd(java.lang.String end) {}'
