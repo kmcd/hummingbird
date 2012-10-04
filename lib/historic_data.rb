@@ -3,7 +3,7 @@ class HistoricData < Gateway
   def_delegators :client_socket, :reqHistoricalData
   
   def ndx10
-    request NDX_10.insert(0, 'QQQ')
+    request ['QQQ'] + NDX_10
   end
   
   def request(symbols, end_date=Time.now.strftime("%Y%m%d %H:%M:%S"))
