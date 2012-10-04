@@ -7,8 +7,4 @@ module Requestable
   def requests
     @requests ||= []
   end
-  
-  def data
-    @data ||= Hash.new {|hash,key| hash[key] = {} }
-  end
 end
