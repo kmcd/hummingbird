@@ -22,16 +22,17 @@ class Knn
   
   def distances(data_point)
     examples.inject([]) do |distances, example|
-      distances << [ euclidean_distance(data_point, example),
-        example[:classification] ]
-    end
+      distance = euclidean_distance data_point, example
+      distances << [ distance, example[:classification] ]
+    end.find_all &:first
   end
   
   def euclidean_distance(data_point, example)
-    HistoricData::NDX_10.map do |ticker|
+    sum_squares = HistoricData::NDX_10.map do |ticker|
       next unless data_point[ticker] && example[ticker]
       (data_point[ticker] - example[ticker]) ** 2
-    end.compact.reduce(:+) ** 0.5
+    end.compact.reduce(:+)
+    sum_squares ** 0.5 if sum_squares
   end
   
   # TODO: investigate guassian - could be sensitive to noise

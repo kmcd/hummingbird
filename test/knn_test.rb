@@ -39,4 +39,10 @@ class KnnTest < Test::Unit::TestCase
     assert_in_delta weighted_distances[nil], 0.0917, 0.01
     assert_in_delta weighted_distances[:long], 0.047, 0.01
   end
+  
+  test "handle first bar" do
+    assert_classified :long, {'AAPL' => 0.01},
+      [{:classification => nil, 'AAPL' => nil },
+      {:classification => :long, 'AAPL' => 0.01 }]
+  end
 end
