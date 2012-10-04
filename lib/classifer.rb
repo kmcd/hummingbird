@@ -1,6 +1,6 @@
 require 'bigdecimal'
 
-class Classifier
+class Classifer
   attr_reader :training_examples, :examples
   
   def initialize(examples={}, index='QQQ')

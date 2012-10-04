@@ -1,6 +1,6 @@
 require 'helper'
 
-class ClassifierTest < Test::Unit::TestCase
+class ClassiferTest < Test::Unit::TestCase
   def training_examples(close=0)
     previous_bar, current_bar = '2012-01-01 09:30:00', '2012-01-01 09:31:00'
     { 
@@ -16,7 +16,7 @@ class ClassifierTest < Test::Unit::TestCase
   end
   
   def trained_examples(close_change=0)
-    Classifier.new(training_examples(close_change)).trained_examples
+    Classifer.new(training_examples(close_change)).trained_examples
   end
   
   def assert_classified(classification, bar)
@@ -42,7 +42,7 @@ class ClassifierTest < Test::Unit::TestCase
   end
   
   test "use percentage change for distance calculation" do
-    examples = Classifier.new(training_examples(0.05)).trained_examples
+    examples = Classifer.new(training_examples(0.05)).trained_examples
     assert_in_delta 0.00083, examples.last['AAPL'], 0.001
   end
 end

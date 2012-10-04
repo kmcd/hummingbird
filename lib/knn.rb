@@ -1,35 +1,41 @@
 class Knn
   attr_reader :examples
   
-  def initialize(examples={})
-    @examples = Classifier.new(examples).trained_examples
+  def initialize(examples=[])
+    @examples = examples.clone
   end
   
   def classify(data_point, k=7)
-    histogram = Hash.new 0
-    distances.sort[0..k].each do |distance|
+    weighted_distances(data_point, k).sort_by {|_,distance| distance }.last.first
+  end
+  
+  def weighted_distances(data_point, k)
+    top(data_point, k).inject( Hash.new {|h,k| h[k] = 0 } ) do |histogram, distance|
       histogram[ distance.last ] += inverse_weight distance.first
-    end
-    histogram.sort {|k1, k2| k1.value <=> k2.value }
-  end
-  
-  def distances
-    @distances ||= examples.inject({}) do |distances, example|
-      distance = euclidean_distance data_point, example
-      classification = example['qqq'] # must be pre-computed
-      distances << [ distance, classification ]
+      histogram
     end
   end
-  
-  def euclidean_distance(point_1, point_2)
-    sum_sq = 0
-    point_1.each do |index,change| 
-      sum_sq += ( change - point_2[index] ) ** 2 
-    end
-    sum_sq ** 0.5
+    
+  def top(data_point, k)
+    distances(data_point).sort_by(&:first)[0..k]
   end
   
+  def distances(data_point)
+    examples.inject([]) do |distances, example|
+      distances << [ euclidean_distance(data_point, example),
+        example[:classification] ]
+    end
+  end
+  
+  def euclidean_distance(data_point, example)
+    HistoricData::NDX_10.map do |ticker|
+      next unless data_point[ticker] && example[ticker]
+      (data_point[ticker] - example[ticker]) ** 2
+    end.compact.reduce(:+) ** 0.5
+  end
+  
+  # TODO: investigate guassian - could be sensitive to noise
   def inverse_weight(distance)
-    1.0 / ( distance + 0.1 )
+    (1.0 / ( distance + 0.1 )) / 10
   end
 end
