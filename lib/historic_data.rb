@@ -1,8 +1,9 @@
 class HistoricData < Gateway
+  NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
   def_delegators :client_socket, :reqHistoricalData
-    
+  
   def ndx10
-    request %w[ QQQ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
+    request NDX_10.insert(0, 'QQQ')
   end
   
   def request(symbols, end_date=Time.now.strftime("%Y%m%d %H:%M:%S"))
@@ -16,7 +17,7 @@ class HistoricData < Gateway
   def historicalData(reqId, date, open, high, low, close, volume, count,
       wap, hasGaps)
     return if date =~ /finished/
-    time_stamp, ticker = DateTime.parse(date), requests.at(reqId)
+    time_stamp, ticker = DateTime.parse(date).to_s(:db), requests.at(reqId)
     
     data[ticker][time_stamp] = {:open => open, :high => high,
       :low => low, :close => close, :volume => volume }
