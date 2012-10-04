@@ -1,3 +1,5 @@
+require 'helper'
+
 class ExampleTest < Test::Unit::TestCase
   def example(args={})
     close = args[:close]  || 0

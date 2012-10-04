@@ -12,5 +12,4 @@ end
 group :test do
   gem 'mocha'
   gem 'redgreen'
-  gem 'autotest-standalone'
 end

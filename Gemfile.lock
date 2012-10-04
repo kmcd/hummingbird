@@ -4,7 +4,6 @@ GEM
     active_support (3.0.0)
       activesupport (= 3.0.0)
     activesupport (3.0.0)
-    autotest-standalone (4.5.9)
     awesome_print (1.1.0)
     i18n (0.6.1)
     looksee (1.0.3-java)
@@ -19,7 +18,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_support
-  autotest-standalone
   awesome_print
   i18n
   looksee

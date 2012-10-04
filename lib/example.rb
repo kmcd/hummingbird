@@ -6,6 +6,7 @@ class Example
   end
   
   def classification
+    return unless current_bar && previous_bar
     return if previous_bar.empty?
     return :long if long?
     return :short if short?
@@ -20,6 +21,7 @@ class Example
   end
   
   def change(ohlc)
-    BigDecimal.new(current_bar[ohlc].to_s) - BigDecimal.new(previous_bar[ohlc].to_s)
+    BigDecimal.new(current_bar[ohlc].to_s) - BigDecimal.new(
+      previous_bar[ohlc].to_s)
   end
 end
