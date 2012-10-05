@@ -1,10 +1,10 @@
 module Requestable
-  def request_id(symbol)
-    requests << symbol unless requests.include? symbol
-    requests.index symbol
+  def ticker_id(symbol)
+    tickers << symbol unless tickers.include? symbol
+    tickers.index symbol
   end
   
-  def requests
-    @requests ||= []
+  def tickers
+    @tickers ||= []
   end
 end

@@ -1,6 +1,7 @@
 require 'gateway'
 
 class HistoricData < Gateway
+  # TODO: move out to market_data / strategy
   NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
   def_delegators :client_socket, :reqHistoricalData
   
@@ -10,7 +11,7 @@ class HistoricData < Gateway
   
   def request(symbols, end_date=Time.now.strftime("%Y%m%d %H:%M:%S"))
     [symbols].flatten.each do |ticker|
-      reqHistoricalData request_id(ticker), 
+      reqHistoricalData ticker_id(ticker), 
         Stock.new(ticker).contract, end_date, '3 D', '1 min', 
           'ASK', 1, 1
     end
@@ -18,8 +19,8 @@ class HistoricData < Gateway
 
   def historicalData(reqId, date, open, high, low, close, volume, count,
       wap, hasGaps)
-    return if date =~ /finished/
-    time_stamp, ticker = DateTime.parse(date).to_s(:db), requests.at(reqId)
+    return if date =~ /finished/ # could notify subscriber instead
+    time_stamp, ticker = DateTime.parse(date).to_s(:db), tickers.at(reqId)
     
     data[ticker][time_stamp] = {:open => open, :high => high,
       :low => low, :close => close, :volume => volume }
