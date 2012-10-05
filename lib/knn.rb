@@ -1,3 +1,5 @@
+require 'classifer'
+
 class Knn
   attr_reader :examples
   

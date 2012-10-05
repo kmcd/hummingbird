@@ -1,3 +1,6 @@
+require 'gateway'
+require 'stock'
+
 class RealtimeData < Gateway
   def_delegators :client_socket, :reqRealTimeBars
     
@@ -9,6 +12,7 @@ class RealtimeData < Gateway
   end
   
   def realtimeBar(reqId, time, open, high, low, close, volume, wap, count)
-    puts [requests.at(reqId), reqId, time, open, high, low, close, volume, wap, count].join ' '
+    puts [requests.at(reqId), reqId, time, open, high, low, close, volume,
+      wap, count].join ' '
   end
 end

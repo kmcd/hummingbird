@@ -1,4 +1,5 @@
 require 'bigdecimal'
+require 'example'
 
 class Classifer
   attr_reader :training_examples, :examples

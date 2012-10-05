@@ -1,3 +1,5 @@
+require 'gateway'
+
 class HistoricData < Gateway
   NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
   def_delegators :client_socket, :reqHistoricalData

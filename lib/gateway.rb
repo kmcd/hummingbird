@@ -1,5 +1,6 @@
 require 'forwardable'
 require 'requestable'
+require 'ib_gateway'
 
 class Gateway < IbGateway
   attr_reader :port, :host
