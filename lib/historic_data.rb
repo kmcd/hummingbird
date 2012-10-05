@@ -22,11 +22,11 @@ class HistoricData < Gateway
     return if date =~ /finished/ # could notify subscriber instead
     time_stamp, ticker = DateTime.parse(date).to_s(:db), tickers.at(reqId)
     
-    data[ticker][time_stamp] = {:open => open, :high => high,
+    historic_data[ticker][time_stamp] = {:open => open, :high => high,
       :low => low, :close => close, :volume => volume }
   end
   
-  def data
-    @data ||= Hash.new {|hash,key| hash[key] = {} }
+  def historic_data
+    @historic_data ||= Hash.new {|hash,key| hash[key] = {} }
   end
 end

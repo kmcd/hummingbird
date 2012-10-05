@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'active_support'
 gem 'i18n'
+gem 'rufus-scheduler'
 
 group :development do
   gem 'looksee'
