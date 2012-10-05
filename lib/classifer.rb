@@ -12,7 +12,7 @@ class Classifer
     @trained_examples ||= train_examples
   end
   
-  def train_examples
+  def train_examples # OPTIMIZE: takes 10 seconds
     training_examples.inject([]) do |trained_examples, example|
       trained_examples << {:classification => classify(example) }.
         merge!(features(example))
@@ -39,8 +39,9 @@ class Classifer
       to_s :db
     return unless examples[ticker] && examples[ticker][previous_time_stamp]
     
-    current_close = examples[ticker][current_time_stamp][:close]
-    previous_close = examples[ticker][previous_time_stamp][:close]
-    (current_close / previous_close) - 1
+    current   = examples[ticker][current_time_stamp][:close].to_s
+    previous  = examples[ticker][previous_time_stamp][:close].to_s
+    change    = ( BigDecimal.new(current) / BigDecimal.new(previous) ) - 1
+    change.nan? ? 0.0 : change.to_f
   end
 end

@@ -1,5 +1,6 @@
 require 'historic_data'
 require 'realtime_data'
+require 'rufus/scheduler'
 
 class MarketData
   include Observable
@@ -11,10 +12,9 @@ class MarketData
   NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
   
   def initialize(tradeable='QQQ', components=NDX_10)
-    [tradeable, components].each do |tickers|
-      historic.request tickers
-      realtime.request tickers
-    end
+    historic.request tradeable
+    historic.request components
+    realtime.request components
   end
   
   def disconnect
@@ -29,4 +29,17 @@ class MarketData
   def realtime
     @realtime ||= RealtimeData.new
   end
+  
+  def realtime_polling
+    scheduler.every '5s' do # May be using quotes that are 5s old!
+      changed
+      notify_observers self
+    end
+  end
+  
+  def scheduler
+    @scheduler ||= Rufus::Scheduler.start_new
+  end
 end
+
+# s.market_data.scheduler.stop

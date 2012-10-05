@@ -26,14 +26,20 @@ class DeckTest < Test::Unit::TestCase
     assert_equal [1], @deck.queue
   end
   
-  test "first last items not available when not full" do
-    assert_nil @deck.first_last
+  test "percent change not available when not full" do
+    assert_nil @deck.percent_change
     9.times { @deck.add 0 }
-    assert_nil @deck.first_last
+    assert_nil @deck.percent_change
   end
   
-  test "first last items available when full" do
-    10.times { @deck.add 0 }
-    assert_equal [0,0], @deck.first_last
+  test "percent change available when full" do
+    10.times { @deck.add 1 }
+    assert_equal 0.0, @deck.percent_change
+  end
+  
+  test "calculate percentage change close" do
+    9.times { @deck.add( {:close => 68.14 } ) }
+    @deck.add( {:close => 68.18 } )
+    assert_in_delta 0.0005870, @deck.percent_change, 0.00001
   end
 end

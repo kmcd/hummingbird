@@ -8,7 +8,8 @@ class Knn
   end
   
   def classify(data_point, k=7)
-    weighted_distances(data_point, k).sort_by {|_,distance| distance }.last.first
+    weighted_distances(data_point, k).sort_by {|_,distance| distance }.last.
+      first
   end
   
   def weighted_distances(data_point, k)

@@ -21,6 +21,6 @@ class RealtimeData < Gateway
   end
   
   def realtime_data
-    @realtime_data ||= Hash.new {|h,k| h[k] = Deck.new(12) }
+    @realtime_data ||= Hash.new {|h,k| h[k] = Deck.new(11) }
   end
 end

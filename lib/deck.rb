@@ -12,11 +12,6 @@ class Deck
     add_to_back bar
   end
   
-  def first_last
-    return unless full?
-    [first, last]
-  end
-  
   def full?
     size == max
   end
@@ -27,5 +22,19 @@ class Deck
   
   def add_to_back(bar)
     insert 0, bar
+  end
+  
+  def percent_change
+    return unless full?
+    change = ( current_close / previous_close ) - 1
+    change.nan? ? 0.0 : change.to_f
+  end
+  
+  def current_close
+    BigDecimal.new first[:close].to_s
+  end
+  
+  def previous_close
+    BigDecimal.new last[:close].to_s
   end
 end

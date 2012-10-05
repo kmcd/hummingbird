@@ -13,6 +13,7 @@ class Example
   end
   
   def long?
+    # TODO: investigate if sensitive to rounding errors, eg 0.0049...
     change(:close) >= 0.05 && change(:low) >= -0.02
   end
   
