@@ -1,8 +1,9 @@
 class Example
-  attr_reader :current_bar, :previous_bar
+  attr_reader :current_bar, :previous_bar, :entry, :exit
   
-  def initialize(current_bar, previous_bar)
+  def initialize(current_bar, previous_bar, entry=0.01, exit=0.01)
     @current_bar, @previous_bar = current_bar, previous_bar
+    @entry, @exit = entry, exit
   end
   
   def classification
@@ -14,11 +15,11 @@ class Example
   
   def long?
     # TODO: investigate if sensitive to rounding errors, eg 0.0049...
-    change(:close) >= 0.05 && change(:low) >= -0.02
+    change(:close) >= entry && change(:low) >= -exit
   end
   
   def short?
-    change(:close) <= -0.05 && change(:high) <= 0.02
+    change(:close) <= -entry && change(:high) <= exit
   end
   
   def change(ohlc)

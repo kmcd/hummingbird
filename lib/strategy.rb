@@ -10,14 +10,14 @@ class Strategy
   def initialize
     @market_data = MarketData.new
     wait_for market_data.historic_data
-    @signal = Hummingbird::Signal.new market_data.historic_data
+    @signal = EntrySignal.new market_data.historic_data
     @position = Position.new
     @order = OrderPlacement.new
     setup_queue_flow
   end
   
-  def trade
-    market_data.realtime_polling
+  def trade(start=true)
+    market_data.realtime_polling start
   end
   
   def wait_for(historic_data)

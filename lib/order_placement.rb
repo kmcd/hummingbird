@@ -1,7 +1,7 @@
 require 'order'
 
-class OrderPlacement # PositionEntry
+class OrderPlacement
   def update(position)
-    puts "[ORDER PLACEMENT] #{position}"
+    puts "[ORDER PLACEMENT] type:#{position.entry} size:#{position.size}"
   end
 end

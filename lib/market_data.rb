@@ -30,7 +30,8 @@ class MarketData
     @realtime ||= RealtimeData.new
   end
   
-  def realtime_polling
+  def realtime_polling(on=true)
+    return scheduler.stop unless on
     scheduler.every '5s' do # May be using quotes that are 5s old!
       changed
       notify_observers self
@@ -41,5 +42,3 @@ class MarketData
     @scheduler ||= Rufus::Scheduler.start_new
   end
 end
-
-# s.market_data.scheduler.stop

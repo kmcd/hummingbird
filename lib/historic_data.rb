@@ -9,7 +9,7 @@ class HistoricData < Gateway
     request ['QQQ'] + NDX_10
   end
   
-  def request(symbols, end_date=Time.now.strftime("%Y%m%d %H:%M:%S"))
+  def request(symbols, end_date=1.day.ago.end_of_day.strftime("%Y%m%d %H:%M:%S"))
     [symbols].flatten.each do |ticker|
       reqHistoricalData ticker_id(ticker), 
         Stock.new(ticker).contract, end_date, '3 D', '1 min', 
