@@ -1,6 +1,6 @@
 require 'observable'
 require 'market_data'
-require 'signal'
+require 'entry_signal'
 require 'position'
 require 'order_placement'
 NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
