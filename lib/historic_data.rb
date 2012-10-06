@@ -1,13 +1,7 @@
 require 'gateway'
 
 class HistoricData < Gateway
-  # TODO: move out to market_data / strategy
-  NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
   def_delegators :client_socket, :reqHistoricalData
-  
-  def ndx10
-    request ['QQQ'] + NDX_10
-  end
   
   def request(symbols, end_date=1.day.ago.end_of_day.strftime("%Y%m%d %H:%M:%S"))
     [symbols].flatten.each do |ticker|

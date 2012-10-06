@@ -25,13 +25,14 @@ class Knn
   
   def distances(data_point)
     examples.inject([]) do |distances, example|
-      distance = euclidean_distance data_point, example
+      training_example = Hash[ example.find_all(&without_classification) ]
+      distance = euclidean_distance data_point, training_example
       distances << [ distance, example[:classification] ]
     end.find_all &:first
   end
   
   def euclidean_distance(data_point, example)
-    sum_squares = HistoricData::NDX_10.map do |ticker|
+    sum_squares = training_examples.map(&:keys).flatten.uniq.map do |ticker|
       next unless data_point[ticker] && example[ticker]
       (data_point[ticker] - example[ticker]) ** 2
     end.compact.reduce(:+)
@@ -41,5 +42,13 @@ class Knn
   # TODO: investigate guassian - could be sensitive to noise
   def inverse_weight(distance)
     (1.0 / ( distance + 0.1 )) / 10
+  end
+  
+  def training_examples
+    examples.map {|h| Hash[ h.find_all(&without_classification) ] }
+  end
+  
+  def without_classification
+    lambda {|k,v| k != :classification } # TODO: move to Example
   end
 end

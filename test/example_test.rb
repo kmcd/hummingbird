@@ -16,17 +16,17 @@ class ExampleTest < Test::Unit::TestCase
   end
   
   test "not long" do
-    assert_classified nil,    :close => 0.04
-    assert_classified nil,    :close => 0.05, :low => -0.03
-    assert_classified nil,    :close => 0.06, :low => -0.03
+    assert_classified nil, :close => 0.04
+    assert_classified nil, :close => 0.05, :low => -0.03
+    assert_classified nil, :close => 0.06, :low => -0.03
   end
   
   test "long" do
-    assert_classified :long,  :close => 0.05
-    assert_classified :long,  :close => 0.05, :low => -0.01
-    assert_classified :long,  :close => 0.05, :low => -0.02
-    assert_classified :long,  :close => 0.06
-    assert_classified :long,  :close => 0.06, :low => -0.02
+    assert_classified :long, :close => 0.05
+    assert_classified :long, :close => 0.05, :low => -0.01
+    assert_classified :long, :close => 0.05, :low => -0.02
+    assert_classified :long, :close => 0.06
+    assert_classified :long, :close => 0.06, :low => -0.02
   end
   
   test "not short" do

@@ -5,7 +5,8 @@ class Classifer
   attr_reader :training_examples, :examples
   
   def initialize(examples={}, index='QQQ')
-    @examples, @training_examples = examples, examples[index].clone
+    @training_examples = examples[index].clone
+    @examples = Hash[ examples.find_all {|ticker,_| ticker != index } ]
   end
   
   def trained_examples
@@ -27,7 +28,7 @@ class Classifer
   end
   
   def features(example)
-    HistoricData::NDX_10.inject({}) do |features,ticker|
+    examples.inject({}) do |features,ticker|
       features[ticker] = percent_change_close(ticker, example)
       features
     end

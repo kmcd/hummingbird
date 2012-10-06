@@ -8,13 +8,23 @@ class MarketData
   def_delegators :historic, :historic_data
   def_delegators :realtime, :realtime_data
   
-  # TODO: move to etf_components.yml
-  NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
-  
-  def initialize(tradeable='QQQ', components=NDX_10)
+  def initialize(tradeable, components)
     historic.request tradeable
     historic.request components
+    print "Waiting for historic data "
+    while historic_data.keys.size < components.size + 1
+      print '.' ; sleep 1
+    end
     realtime.request components
+  end
+  
+  def current_ask
+    realtime_data[tradeable].current_close
+  end
+  
+  def realtime_polling(on=true)
+    return scheduler.stop unless on
+    scheduler.every('5s') { changed ; notify_observers self }
   end
   
   def disconnect
@@ -28,14 +38,6 @@ class MarketData
   
   def realtime
     @realtime ||= RealtimeData.new
-  end
-  
-  def realtime_polling(on=true)
-    return scheduler.stop unless on
-    scheduler.every '5s' do # May be using quotes that are 5s old!
-      changed
-      notify_observers self
-    end
   end
   
   def scheduler

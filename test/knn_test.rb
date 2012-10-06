@@ -26,7 +26,7 @@ class KnnTest < Test::Unit::TestCase
   end
   
   test "euclidean distance" do
-    knn = Knn.new
+    knn = Knn.new [{:classification => nil, 'AAPL' => 0.01 }]
     assert_equal 0.0, knn.euclidean_distance({'AAPL' => 1 }, {'AAPL' => 1 })
     assert_equal 1.0, knn.euclidean_distance({'AAPL' => 1 }, {'AAPL' => 2 })
   end

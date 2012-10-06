@@ -1,3 +1,5 @@
+require 'order_request'
+
 class Order
   attr_reader :contract, :ib_id, :contract, :ib_order
   
@@ -8,15 +10,19 @@ class Order
     orders
   end
   
-  def initialize(ticker, action, quantity, price, type='LMT', duration='IOC')
-    @contract = Stock.new(ticker).contract
+  def initialize(args={})
+    @contract = Stock.new(args[:ticker]).contract
     @ib_order = com.ib.client.Order.new
-    ib_order.m_action = action
-    ib_order.m_totalQuantity = quantity
-    ib_order.m_orderType = type
-    ib_order.m_tif = duration
+    ib_order.m_action = args[:action]
+    ib_order.m_totalQuantity = args[:quantity]
+    ib_order.m_lmtPrice = args[:price]
+    ib_order.m_auxPrice = args[:stop]
+    ib_order.m_ocaGroup = args[:oca_group] || ''
+    ib_order.m_ocaType = 1
+    ib_order.m_orderType = args[:type] || 'LMT'
+    ib_order.m_tif = 'IOC'
     ib_order.m_allOrNone = true
-    ib_order.m_lmtPrice = price if type == 'LMT'
+    ib_order.m_goodAfterTime = args[:activate_at]
   end
   
   def place
@@ -33,25 +39,5 @@ class Order
   
   def gateway
     @gateway ||= Gateway.new
-  end
-end
-
-class OrderRequest < Gateway
-  attr_reader :next_order_id
-    
-  def next_available_id
-    return next_order_id if next_order_id
-    request_next_order_id
-    sleep 0.5
-    disconnect
-    next_order_id
-  end
-  
-  def request_next_order_id
-    client_socket.reqIds 2
-  end
-  
-  def nextValidId(next_order_id)
-    @next_order_id = next_order_id
   end
 end
