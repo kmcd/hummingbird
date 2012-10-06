@@ -3,11 +3,11 @@ require 'gateway'
 class HistoricData < Gateway
   def_delegators :client_socket, :reqHistoricalData
   
-  def request(symbols, end_date=1.day.ago.end_of_day.strftime("%Y%m%d %H:%M:%S"))
+  def request(symbols, end_date=1.day.ago.end_of_day.
+    strftime("%Y%m%d %H:%M:%S"), days=3)
     [symbols].flatten.each do |ticker|
-      reqHistoricalData ticker_id(ticker), 
-        Stock.new(ticker).contract, end_date, '3 D', '1 min', 
-          'ASK', 1, 1
+      reqHistoricalData ticker_id(ticker), Stock.new(ticker).contract, 
+        end_date, "#{days.to_s} D", '1 min', 'ASK', 1, 1
     end
   end
 
