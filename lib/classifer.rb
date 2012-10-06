@@ -28,7 +28,7 @@ class Classifer
   end
   
   def features(example)
-    examples.inject({}) do |features,ticker|
+    examples.keys.inject({}) do |features,ticker|
       features[ticker] = percent_change_close(ticker, example)
       features
     end
