@@ -8,6 +8,7 @@ class Knn
   end
   
   def classify(data_point, k=7)
+    return if data_point.values.compact.empty?
     weighted_distances(data_point, k).
       sort_by {|_,distance| distance }.last.first
   end
@@ -32,7 +33,7 @@ class Knn
   end
   
   def euclidean_distance(data_point, example)
-    sum_squares = training_examples.map(&:keys).flatten.uniq.map do |ticker|
+    sum_squares = training_examples.map do |ticker|
       next unless data_point[ticker] && example[ticker]
       (data_point[ticker] - example[ticker]) ** 2
     end.compact.reduce(:+)
@@ -45,7 +46,9 @@ class Knn
   end
   
   def training_examples
-    examples.map {|h| Hash[ h.find_all(&without_classification) ] }
+    @training_examples ||= examples.
+      map {|h| Hash[ h.find_all(&without_classification) ] }.
+      map(&:keys).flatten.uniq
   end
   
   def without_classification

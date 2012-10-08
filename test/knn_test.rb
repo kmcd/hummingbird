@@ -1,7 +1,5 @@
 require 'helper'
 
-# load 3d worth of data: 
-# Classifer.new YAML.load(File.read("./test/qqq_ndx10.yml")
 class KnnTest < Test::Unit::TestCase
   def assert_classified(classification, data_point, examples)
     knn = Knn.new examples

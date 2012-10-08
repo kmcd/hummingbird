@@ -10,7 +10,7 @@ class EntrySignal
   end
   
   def update(market_data)
-    return unless self.currexnt = knn.classify(example_from(market_data))
+    return unless self.current = knn.classify(example_from(market_data))
     changed
     notify_observers self
   end
