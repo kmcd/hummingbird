@@ -1,8 +1,10 @@
 require 'gateway'
+require 'requestable'
 require 'stock'
 require 'deck'
 
 class RealtimeData < Gateway
+  include Requestable
   def_delegators :client_socket, :reqRealTimeBars
     
   def request(symbol)
@@ -18,6 +20,10 @@ class RealtimeData < Gateway
     realtime_data[tickers.at(reqId)].add({:open => open, :high => high,
       :low => low, :close => close, :volume => volume, 
       :time_stamp => time_stamp })
+  end
+  
+  def current_ask(ticker)
+    realtime_data[ticker].current_close
   end
   
   def realtime_data

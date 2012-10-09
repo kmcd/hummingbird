@@ -1,6 +1,8 @@
 require 'gateway'
+require 'requestable'
 
 class HistoricData < Gateway
+  include Requestable
   def_delegators :client_socket, :reqHistoricalData
   
   def request(symbols, end_date=1.day.ago.end_of_day.

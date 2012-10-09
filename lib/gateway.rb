@@ -1,10 +1,8 @@
 require 'forwardable'
-require 'requestable'
 require 'ib_gateway'
 
 class Gateway < IbGateway
   attr_reader :port, :host
-  include Requestable
   extend Forwardable
   def_delegators :client_socket, :eConnect, :eDisconnect, :connected?,
     :placeOrder, :cancelOrder, :reqAllOpenOrders

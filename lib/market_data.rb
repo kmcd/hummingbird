@@ -18,10 +18,6 @@ class MarketData
     realtime.request components
   end
   
-  def current_ask
-    realtime_data[tradeable].current_close
-  end
-  
   def realtime_polling(on=true)
     return scheduler.stop unless on
     scheduler.every('5s') { changed ; notify_observers self }

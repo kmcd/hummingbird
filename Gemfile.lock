@@ -11,6 +11,7 @@ GEM
     mocha (0.12.6)
       metaclass (~> 0.0.1)
     redgreen (1.2.2)
+    redis (3.0.2)
     rufus-scheduler (2.0.17)
       tzinfo (>= 0.3.23)
     tzinfo (0.3.33)
@@ -26,5 +27,6 @@ DEPENDENCIES
   looksee
   mocha
   redgreen
+  redis
   rufus-scheduler
   wirble
