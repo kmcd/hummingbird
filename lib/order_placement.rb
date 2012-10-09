@@ -21,47 +21,49 @@ class OrderPlacement < Gateway
   end
   
   def long(quantity)
+    shares = (quantity / current_ask).round
     oca_group = "#{ticker}_long_#{Time.now.to_i}"
     
     orders << Order.new(:action => 'BUY', :ticker => ticker,
-      :quantity => quantity, :price => current_ask, :gateway => self,
+      :quantity => shares, :price => current_ask, :gateway => self,
       :oca_group => oca_group, :expire_at => time_to_fill)
     
     orders << Order.new(:action => 'SELL', :type => 'STPLMT',
-      :ticker => ticker, :quantity => quantity, :price => profit_target, 
+      :ticker => ticker, :quantity => shares, :price => profit_target, 
       :stop => profit_target - 0.01, :oca_group => oca_group, 
       :gateway => self )
     
     orders << Order.new(:action => 'SELL', :type => 'STPLMT', 
-      :ticker => ticker, :quantity => quantity, :price => stop_loss, 
+      :ticker => ticker, :quantity => shares, :price => stop_loss, 
       :stop => profit_target + 0.01, :oca_group => oca_group, 
       :gateway => self)
     
     orders << Order.new(:action => 'SELL', :type => 'MKT', 
-      :ticker => ticker, :quantity => quantity, :oca_group => oca_group,
+      :ticker => ticker, :quantity => shares, :oca_group => oca_group,
       :activate_at => 1.minute.from_now.strftime("%Y%m%d %H:%M:%S"),
       :gateway => self)
   end
   
   def short(quantity)
+    shares = (quantity / current_ask).round
     oca_group = "#{ticker}_short_#{Time.now.to_i}"
     
     orders << Order.new(:action => 'SELL', :ticker => ticker,
-      :quantity => quantity, :price => current_ask, :gateway => self,
+      :quantity => shares, :price => current_ask, :gateway => self,
       :oca_group => oca_group, :expire_at => time_to_fill)
     
     orders << Order.new(:action => 'BUY', :type => 'STPLMT', 
-      :ticker => ticker, :quantity => quantity, 
+      :ticker => ticker, :quantity => shares, 
       :price => profit_target(:short),  :stop => profit_target + 0.01, 
       :oca_group => oca_group, :gateway => self)
     
     orders << Order.new(:action => 'BUY', :type => 'STPLMT',
-      :ticker => ticker, :quantity => quantity, :price => stop_loss(:short),
+      :ticker => ticker, :quantity => shares, :price => stop_loss(:short),
       :stop => profit_target - 0.01, :oca_group => oca_group,
       :gateway => self)
     
     orders << Order.new(:action => 'BUY', :type => 'MKT', :ticker => ticker,
-      :quantity => quantity, :oca_group => oca_group, :gateway => self,
+      :quantity => shares, :oca_group => oca_group, :gateway => self,
       :activate_at => 1.minute.from_now.strftime("%Y%m%d %H:%M:%S"))
   end
   
@@ -85,7 +87,7 @@ class OrderPlacement < Gateway
   end
   
   def current_ask
-    realtime_data.current_ask ticker # FIXME: 5s old - could miss the market
+    realtime_data.current_ask ticker # 5s old - could miss the market
   end
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,

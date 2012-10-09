@@ -16,7 +16,7 @@ class ClassiferTest < Test::Unit::TestCase
   end
   
   def trained_examples(close_change=0)
-    Classifer.new(training_examples(close_change)).trained_examples
+    Classifer.new('QQQ', training_examples(close_change)).trained_examples
   end
   
   def assert_classified(classification, bar)
@@ -42,7 +42,7 @@ class ClassiferTest < Test::Unit::TestCase
   end
   
   test "use percentage change for distance calculation" do
-    examples = Classifer.new(training_examples(0.05)).trained_examples
+    examples = Classifer.new('QQQ', training_examples(0.05)).trained_examples
     assert_in_delta 0.00083, examples.last['AAPL'], 0.001
   end
 end

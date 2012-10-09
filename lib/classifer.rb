@@ -4,9 +4,9 @@ require 'example'
 class Classifer
   attr_reader :training_examples, :examples
   
-  def initialize(examples={}, index='QQQ')
-    @training_examples = examples[index].clone
-    @examples = Hash[ examples.find_all {|ticker,_| ticker != index } ]
+  def initialize(ticker, examples={})
+    @training_examples = examples[ticker].clone
+    @examples = Hash[ examples.find_all {|example,_| example != ticker } ]
   end
   
   def trained_examples

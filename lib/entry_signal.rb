@@ -5,8 +5,8 @@ class EntrySignal
   attr_reader :knn
   attr_accessor :current
   
-  def initialize(historic_data)
-    @knn = Knn.new Classifer.new(historic_data).trained_examples
+  def initialize(ticker, historic_data)
+    @knn = Knn.new Classifer.new(ticker, historic_data).trained_examples
   end
   
   def update(market_data)
