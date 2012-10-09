@@ -90,10 +90,8 @@ class OrderPlacement < Gateway
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,
       parentId, lastFillPrice, clientId, whyHeld)
-    return unless orders.first.order_id == order_id
-    case status
-      when /(inactive|cancelled)/i  ; orders.each(&:cancel); orders.clear
-      when /filled/i                ; orders.clear
-    end
+    order = orders.find {|order| order.order_id == order_id }
+    orders.each &:cancel  if status =~ /cancelled/i && order == orders.first
+    orders.delete order   if status =~ /(inactive|cancelled|filled)/i
   end
 end

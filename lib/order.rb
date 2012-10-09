@@ -2,7 +2,6 @@ require 'redis'
 
 class Order
   attr_reader :contract, :ib_id, :contract, :ib_order, :gateway
-  attr_accessor :filled
   
   def initialize(args={})
     @gateway = args[:gateway]
