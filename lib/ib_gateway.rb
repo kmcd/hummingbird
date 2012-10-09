@@ -45,10 +45,9 @@ class IbGateway
   
   # Conflict between error() with arity 1,3
   # java_signature 'public error(String str) { println str }'
-  # def error(str)
-  # end
-  java_signature 'public error(int id, int errorCode, String errorMsg){}'
-  def error(id, errorCode, errorMsg)
+  # java_signature 'public error(int id, int errorCode, String errorMsg){}'
+  # def error(id, errorCode, errorMsg)
+  def error(*args)
   end
   
   java_signature 'public execDetails(int orderId, Contract contract, Execution execution) {}'

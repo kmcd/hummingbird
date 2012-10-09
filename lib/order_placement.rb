@@ -9,15 +9,17 @@ class OrderPlacement < Gateway
   end
   
   def update(position)
-    raise ArgumentError unless position.type
+    raise ArgumentError unless position.entry
     return unless orders.empty?
-    create position.type, position.size
-    orders.each &:place
+    create position.entry, position.size
   end
   
-  def create(type, quantity)
-    long(quantity) if type.to_sym == :long
-    short quantity
+  def create(entry, quantity)
+    case entry.to_s
+      when /long/   ; long quantity
+      when /short/  ; short quantity
+    end
+    orders.each &:place
   end
   
   def long(quantity)
@@ -92,6 +94,9 @@ class OrderPlacement < Gateway
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,
       parentId, lastFillPrice, clientId, whyHeld)
+  
+    puts [order_id, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld].join ' '
+    
     order = orders.find {|order| order.order_id == order_id }
     orders.each &:cancel  if status =~ /cancelled/i && order == orders.first
     orders.delete order   if status =~ /(inactive|cancelled|filled)/i

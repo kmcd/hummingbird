@@ -10,7 +10,9 @@ class EntrySignal
   end
   
   def update(market_data)
-    return unless self.current = knn.classify(example_from(market_data))
+    self.current = knn.classify example_from(market_data)
+    log knn, example_from(market_data)
+    return unless current
     changed
     notify_observers self
   end
@@ -19,5 +21,14 @@ class EntrySignal
     market_data.realtime_data.to_a.map do |ticker, deck|
       { ticker => deck.percent_change }
     end.inject({}) {|hash, ticker| hash.merge!(ticker) }
+  end
+  
+  def log(knn, example)
+    distances = knn.weighted_distances(example).sort_by {|_,dist| dist }
+    logger.info "[ENTRY SIGNAL] #{distances.inspect}"
+  end
+  
+  def logger
+    @logger || Logger.new("./log/entry_signal_#{Date.today.to_s(:db)}.log")
   end
 end

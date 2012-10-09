@@ -12,7 +12,7 @@ class Strategy
     @market_data = MarketData.new tradeable, components
     @signal = EntrySignal.new tradeable, market_data.historic_data
     @position = Position.new
-    @order = OrderPlacement.new tradeable, market_data.realtime_data
+    @order = OrderPlacement.new tradeable, market_data.realtime
     setup_queue_flow
   end
   

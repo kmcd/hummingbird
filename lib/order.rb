@@ -21,14 +21,24 @@ class Order
   end
   
   def place
+    log :place
     gateway.placeOrder order_id, contract, ib_order
   end
   
   def cancel
+    log :cancel
     gateway.cancelOrder order_id
   end
   
   def order_id
     @order_id ||= Redis.new.incr :next_order_id
+  end
+  
+  def log(submission)
+    logger.info "[ORDER] #{submission.to_s}: #{DateTime.now.to_s(:db)} #{contract.m_symbol} #{ib_order.m_action} #{ib_order.m_totalQuantity} #{ib_order.m_lmtPrice} #{ib_order.m_auxPrice}"
+  end
+  
+  def logger
+    @logger || Logger.new("./log/order_#{Date.today.to_s(:db)}.log")
   end
 end

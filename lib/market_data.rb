@@ -15,6 +15,7 @@ class MarketData
     while historic_data.keys.size < components.size + 1
       print '.' ; sleep 1
     end
+    realtime.request tradeable
     realtime.request components
   end
   
