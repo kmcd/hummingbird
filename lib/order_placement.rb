@@ -24,6 +24,7 @@ class OrderPlacement < Gateway
   
   def long(quantity)
     shares = (quantity / current_ask).round
+    return if shares < 1
     oca_group = "#{ticker}_long_#{Time.now.to_i}"
     
     orders << Order.new(:action => 'BUY', :ticker => ticker,
@@ -48,6 +49,7 @@ class OrderPlacement < Gateway
   
   def short(quantity)
     shares = (quantity / current_ask).round
+    return if shares < 1
     oca_group = "#{ticker}_short_#{Time.now.to_i}"
     
     orders << Order.new(:action => 'SELL', :ticker => ticker,
@@ -81,7 +83,7 @@ class OrderPlacement < Gateway
   end
   
   def time_to_fill
-    10.seconds.from_now.strftime "%Y%m%d %H:%M:%S"
+    5.seconds.from_now.strftime "%Y%m%d %H:%M:%S"
   end
   
   def orders
