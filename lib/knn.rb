@@ -1,10 +1,10 @@
 require 'classifer'
 
-class Knn
-  attr_reader :examples, :k
+class KNearestNeighbours
+  attr_reader :examples, :neighbours
   
-  def initialize(examples=[], k=7)
-    @examples, @k = examples.clone, k
+  def initialize(examples=[], neighbours=7)
+    @examples, @neighbours = examples.clone, neighbours
   end
   
   def classify(data_point)
@@ -13,14 +13,15 @@ class Knn
   end
   
   def weighted_distances(data_point)
-    top(data_point).inject( Hash.new {|h,k| h[k] = 0 } ) do |histogram, distance|
+    default_histogram = Hash.new {|h,neighbours| h[neighbours] = 0 }
+    top(data_point).inject( default_histogram ) do |histogram, distance|
       histogram[ distance.last ] += inverse_weight distance.first
       histogram
     end
   end
     
   def top(data_point)
-    distances(data_point).sort_by(&:first)[0..k]
+    distances(data_point).sort_by(&:first)[0..neighbours]
   end
   
   def distances(data_point)
@@ -51,6 +52,6 @@ class Knn
   end
   
   def without_classification
-    lambda {|k,v| k != :classification } # TODO: move to Example
-  end
+    lambda {|neighbours,v| neighbours != :classification }
+  end # TODO: move to Example
 end

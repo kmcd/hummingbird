@@ -6,7 +6,7 @@ class EntrySignal
   attr_accessor :current
   
   def initialize(ticker, historic_data)
-    @knn = Knn.new Classifer.new(ticker, historic_data).trained_examples
+    @knn = KNearestNeighbours.new Classifer.new(ticker, historic_data).trained_examples
   end
   
   def update(market_data)

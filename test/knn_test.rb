@@ -1,8 +1,8 @@
 require 'helper'
 
-class KnnTest < Test::Unit::TestCase
+class KNearestNeighboursTest < Test::Unit::TestCase
   def assert_classified(classification, data_point, examples)
-    knn = Knn.new examples
+    knn = KNearestNeighbours.new examples
     assert_equal classification, knn.classify(data_point)
   end
   
@@ -24,15 +24,15 @@ class KnnTest < Test::Unit::TestCase
   end
   
   test "euclidean distance" do
-    knn = Knn.new [{:classification => nil, 'AAPL' => 0.01 }]
+    knn = KNearestNeighbours.new [{:classification => nil, 'AAPL' => 0.01 }]
     assert_equal 0.0, knn.euclidean_distance({'AAPL' => 1 }, {'AAPL' => 1 })
     assert_equal 1.0, knn.euclidean_distance({'AAPL' => 1 }, {'AAPL' => 2 })
   end
   
   test "inverse weight" do
-    knn = Knn.new [{:classification => nil, 'AAPL' =>1 },
+    knn = KNearestNeighbours.new [{:classification => nil, 'AAPL' =>1 },
       {:classification => :long, 'AAPL' => 2 }]
-    weighted_distances = knn.weighted_distances({'AAPL' => 0.01}, 7)
+    weighted_distances = knn.weighted_distances({'AAPL' => 0.01})
     
     assert_in_delta weighted_distances[nil], 0.0917, 0.01
     assert_in_delta weighted_distances[:long], 0.047, 0.01

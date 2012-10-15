@@ -15,7 +15,7 @@ train.request %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ],
   end_day, previous
   
 # TODO: wait for train.historic_data.keys
-knn = Knn.new Classifer.new(train.historic_data, 'SQQQ').trained_examples
+knn = KNearestNeighbours.new Classifer.new(train.historic_data, 'SQQQ').trained_examples
 
 # Fetch data: previous 1 days
 previous = 1
