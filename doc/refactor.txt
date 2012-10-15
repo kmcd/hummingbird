@@ -1,0 +1,26 @@
+lib/classifer.rb -- 6 warnings:
+  Classifer#classify refers to example more than self (FeatureEnvy)
+  Classifer#percent_change_close has approx 8 statements (TooManyStatements)
+lib/entry_signal.rb -- 7 warnings:
+  EntrySignal#example_from doesn't depend on instance state (UtilityFunction)
+  EntrySignal#example_from refers to deck more than self (FeatureEnvy)
+  EntrySignal#example_from refers to hash more than self (FeatureEnvy)
+  EntrySignal#example_from refers to market_data more than self (FeatureEnvy)
+lib/knn.rb -- 10 warnings:
+  KNearestNeighbours#euclidean_distance refers to data_point more than self (FeatureEnvy)
+  KNearestNeighbours#euclidean_distance refers to example more than self (FeatureEnvy)
+  KNearestNeighbours#inverse_weight doesn't depend on instance state (UtilityFunction)
+  KNearestNeighbours#inverse_weight refers to distance more than self (FeatureEnvy)
+lib/market_data.rb -- 5 warnings:
+  MarketData#realtime_polling has boolean parameter 'on' (BooleanParameter)
+  MarketData#realtime_polling is controlled by argument on (ControlParameter)
+lib/order_placement.rb -- 28 warnings:
+  OrderPlacement#long has approx 7 statements (TooManyStatements)
+  OrderPlacement#profit_target has boolean parameter 'short' (BooleanParameter)
+  OrderPlacement#profit_target is controlled by argument short (ControlParameter)
+  OrderPlacement#short has approx 7 statements (TooManyStatements)
+  OrderPlacement#stop_loss has boolean parameter 'short' (BooleanParameter)
+  OrderPlacement#stop_loss is controlled by argument short (ControlParameter)
+  OrderPlacement#time_to_fill doesn't depend on instance state (UtilityFunction)
+lib/strategy.rb -- 5 warnings:
+  Strategy#trade has boolean parameter 'start' (BooleanParameter)
