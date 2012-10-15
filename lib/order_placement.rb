@@ -1,7 +1,7 @@
 require 'order'
 
 class OrderPlacement < Gateway
-  attr_reader :ticker, :realtime_data, :next_order_id
+  attr_reader :ticker, :realtime_data
   
   def initialize(ticker, realtime_data)
     @ticker, @realtime_data = ticker, realtime_data
