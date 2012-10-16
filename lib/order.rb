@@ -8,7 +8,7 @@ class Order
   end
   
   def self.sell(args={})
-    new args.merge!(:action => 'BUY')
+    new args.merge!(:action => 'SELL')
   end
   
   def initialize(args={})
@@ -22,11 +22,16 @@ class Order
     ib_order.m_ocaGroup = args[:oca_group] || ''
     ib_order.m_ocaType = 1
     ib_order.m_orderType = args[:type] || 'LMT'
-    ib_order.m_tif = args[:expire_at] ? 'GTD' : 'IOC'
+    ib_order.m_tif = args[:expire_at] ? 'GTD' : 'GTC'
     ib_order.m_allOrNone = true
-    ib_order.m_goodAfterTime = args[:activate_at] || ''
-    ib_order.m_goodTillDate = args[:expire_at] || ''
+    ib_order.m_goodAfterTime = args[:activate_at] if args[:activate_at]
+    ib_order.m_goodTillDate = args[:expire_at] if args[:expire_at]
     ib_order.m_parentId = args[:parent_id]
+    ib_order.m_transmit = args[:transmit].nil? ? true : args[:transmit]
+  end
+  
+  def inspect
+    "#<#{self.class.to_s} #{info}>"
   end
   
   def place
@@ -49,7 +54,11 @@ class Order
   end
   
   def log(submission)
-    logger.info "[ORDER] #{submission.to_s}: #{DateTime.now.to_s(:db)} #{contract.m_symbol} #{ib_order.m_action} #{ib_order.m_totalQuantity} #{ib_order.m_lmtPrice} #{ib_order.m_auxPrice}"
+    logger.info "[ORDER] #{submission.to_s}: #{info}"
+  end
+  
+  def info
+    "#{DateTime.now.to_s(:db)} #{ib_order.m_action} #{ib_order.m_totalQuantity}  #{contract.m_symbol} @ #{ib_order.m_lmtPrice}, trigger:#{ib_order.m_auxPrice}"
   end
   
   def logger
