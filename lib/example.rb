@@ -14,9 +14,8 @@ class Example
   end
   
   def long?
-    # TODO: investigate if sensitive to rounding errors, eg 0.0049...
     change(:close) >= entry && change(:low) >= -exit
-  end
+  end # TODO: investigate if sensitive to rounding errors, eg 0.0049...
   
   def short?
     change(:close) <= -entry && change(:high) <= exit

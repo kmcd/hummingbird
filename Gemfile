@@ -9,6 +9,7 @@ group :development do
   gem 'looksee'
   gem 'awesome_print'
   gem 'wirble'
+  gem 'ruby-debug'
 end
 
 group :test do

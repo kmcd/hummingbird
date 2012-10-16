@@ -25,7 +25,7 @@ class Classifer
     time_stamp = (DateTime.parse(example.first) - 1.minute).to_s :db
     previous_bar = training_examples[time_stamp]
     Example.new(current_bar, previous_bar).classification
-  end
+  end # TODO: push down to Example.classify example.last, training_examples
   
   def features(example)
     examples.keys.inject({}) do |features,ticker|

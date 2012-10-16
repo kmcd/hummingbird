@@ -1,7 +1,15 @@
-require 'redis'
+require 'live_order'
 
 class Order
   attr_reader :contract, :ib_id, :contract, :ib_order, :gateway
+  
+  def self.buy(args={})
+    new args.merge!(:action => 'BUY')
+  end
+  
+  def self.sell(args={})
+    new args.merge!(:action => 'BUY')
+  end
   
   def initialize(args={})
     @gateway = args[:gateway]
@@ -18,11 +26,13 @@ class Order
     ib_order.m_allOrNone = true
     ib_order.m_goodAfterTime = args[:activate_at] || ''
     ib_order.m_goodTillDate = args[:expire_at] || ''
+    ib_order.m_parentId = args[:parent_id]
   end
   
   def place
     log :place
     gateway.placeOrder order_id, contract, ib_order
+    LiveOrder.create self
   end
   
   def cancel
@@ -32,6 +42,10 @@ class Order
   
   def order_id
     @order_id ||= Redis.new.incr :next_order_id
+  end
+  
+  def entry_order_id
+    ib_order.m_parentId
   end
   
   def log(submission)

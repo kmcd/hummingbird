@@ -9,10 +9,14 @@ class Position < Gateway
   
   def update(signal)
     self.entry = signal.current
-    return unless entry && viable?
+    return unless entry && viable? && slot_available?
     log
     changed
     notify_observers self
+  end
+  
+  def slot_available?
+    # TODO: any live orders for this strategy?
   end
   
   def viable?
@@ -20,9 +24,10 @@ class Position < Gateway
   end
   
   def size
-    10_000 # fixed for evaluation
+    5_000 # fixed for evaluation
   end
   
+  # TODO: move to account
   def updateAccountValue(key, value, currency, accountName)
     case key
       when /(AvailableFunds)/i  ; self.account_balance  = value.to_f
