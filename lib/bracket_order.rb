@@ -16,7 +16,8 @@ class BracketOrder
   end
   
   def bracket_orders
-    [ entry_order, profit_target_exit, stop_loss_exit, expiry_exit ]
+    [ entry_order, profit_target_exit, stop_loss_exit, emergency_floor_exit,
+      expiry_exit ]
   end
   
   def long?
@@ -25,7 +26,7 @@ class BracketOrder
   
   def order(order_args={})
     args = { :ticker => ticker, :quantity => shares, :price => current_ask,
-      :gateway => gateway, :transmit => true }.merge! order_args
+      :gateway => gateway, :transmit => false }.merge! order_args
     
     exit_order = !order_args[:type].blank?
     if exit_order
@@ -43,13 +44,15 @@ class BracketOrder
   end
   
   def profit_target_exit
-    order :type => 'LMT', :price => profit_target
+    order :type => 'STPLMT', :price => profit_target, :stop => profit_target
   end
   
   def stop_loss_exit
-    # FIXME: could trade trough this price
-    # Also, are you signalling intent - can you conceal order?
-    order :type => 'LMT', :price => stop_loss, :transmit => true
+    order :type => 'STPLMT', :price => stop_loss, :stop => stop_loss
+  end
+  
+  def emergency_floor_exit
+    order :type => 'STP', :stop => emergency_floor
   end
   
   def expiry_exit
@@ -58,7 +61,8 @@ class BracketOrder
   end
   
   def oca_group
-    @oca_group ||= [ ticker, entry.to_s.downcase, Time.now.to_i ].join '_'
+    @oca_group ||= [ ticker, entry.to_s.downcase, Time.now.to_i.to_s ].
+      join '_'
   end
   
   def shares
@@ -66,11 +70,15 @@ class BracketOrder
   end
   
   def profit_target
-    current_ask + (long? ? 0.05 : -0.05)
-  end # TODO: dry up with Classifier
+    current_ask + (long? ? 0.04 : -0.04)
+  end # N.B. assumes bid/ask spread of 1, given 0.02 - 0.05 ask range
   
   def stop_loss
-    current_ask + (long? ? -0.02 : 0.02)
+    current_ask + (long? ? -0.03 : 0.03)
+  end
+  
+  def emergency_floor
+    stop_loss + (long? ? -0.01 : 0.01)
   end
 end
 

@@ -22,7 +22,7 @@ class Order
     ib_order.m_ocaGroup = args[:oca_group] || ''
     ib_order.m_ocaType = 1
     ib_order.m_orderType = args[:type] || 'LMT'
-    ib_order.m_tif = args[:expire_at] ? 'GTD' : 'GTC'
+    ib_order.m_tif = args[:expire_at] ? 'GTD' : 'DAY'
     ib_order.m_allOrNone = true
     ib_order.m_goodAfterTime = args[:activate_at] if args[:activate_at]
     ib_order.m_goodTillDate = args[:expire_at] if args[:expire_at]
