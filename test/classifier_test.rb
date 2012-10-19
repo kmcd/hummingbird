@@ -1,4 +1,5 @@
 require 'helper'
+require 'classifer'
 
 class ClassiferTest < Test::Unit::TestCase
   def training_examples(close=0)

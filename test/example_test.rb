@@ -1,4 +1,5 @@
 require 'helper'
+require 'example'
 
 class ExampleTest < Test::Unit::TestCase
   def example(args={})
