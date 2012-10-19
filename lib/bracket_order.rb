@@ -12,12 +12,16 @@ class BracketOrder
   
   def place_orders
     return if shares < 1
-    bracket_orders.each &:place
-  end
-  
-  def bracket_orders
-    [ entry_order, profit_target_exit, stop_loss_exit, emergency_floor_exit,
-      expiry_exit ]
+    
+    [ entry_order,
+      order(:type => 'LMT',     :price => profit_target(0.05)),
+      order(:type => 'LMT',     :price => profit_target(0.04), :activate_at => 36.seconds.from_now.ib_format),
+      order(:type => 'LMT',     :price => profit_target(0.03), :activate_at => 52.seconds.from_now.ib_format),
+      order(:type => 'LMT',     :price => profit_target(0.02), :activate_at => 56.seconds.from_now.ib_format),
+      order(:type => 'STPLMT',  :price => stop_loss(0.02), :stop => stop_loss(0.02)),
+      order(:type => 'STP',     :stop =>  stop_loss(0.03)),
+      order(:type => 'MKT',     :activate_at => 1.minute.from_now.ib_format, transmit => true),
+    ].each &:place
   end
   
   def long?
@@ -30,8 +34,7 @@ class BracketOrder
     
     exit_order = !order_args[:type].blank?
     if exit_order
-      args.merge!({:parent_id => entry_order.order_id, 
-        :oca_group => oca_group})
+      args.merge!({:parent_id => entry_order.order_id, :oca_group => oca_group})
       long? ? Order.sell(args) : Order.buy(args)
     else
       long? ? Order.buy(args) : Order.sell(args)
@@ -43,23 +46,6 @@ class BracketOrder
       from_now.ib_format
   end
   
-  def profit_target_exit
-    order :type => 'STPLMT', :price => profit_target, :stop => profit_target
-  end
-  
-  def stop_loss_exit
-    order :type => 'STPLMT', :price => stop_loss, :stop => stop_loss
-  end
-  
-  def emergency_floor_exit
-    order :type => 'STP', :stop => emergency_floor
-  end
-  
-  def expiry_exit
-    order :type => 'MKT', :activate_at => 1.minute.from_now.ib_format,
-      :transmit => true
-  end
-  
   def oca_group
     @oca_group ||= [ ticker, entry.to_s.downcase, Time.now.to_i.to_s ].
       join '_'
@@ -69,16 +55,16 @@ class BracketOrder
     (quantity / current_ask).round
   end
   
-  def profit_target
-    current_ask + (long? ? 0.04 : -0.04)
-  end # N.B. assumes bid/ask spread of 1, given 0.02 - 0.05 ask range
+  def profit_target(target)
+    current_bid + (long? ? target : -target)
+  end 
   
-  def stop_loss
-    current_ask + (long? ? -0.03 : 0.03)
+  def stop_loss(target)
+    current_bid + (long? ? -target : target)
   end
   
-  def emergency_floor
-    stop_loss + (long? ? -0.01 : 0.01)
+  def current_bid
+    current_ask - 0.01 # assuming tight spread
   end
 end
 
