@@ -36,7 +36,7 @@ class Backtest
   
   def report
     positions_taken = positions.find_all &:last
-    missed_positions = positions_taken.size - positions.find_all(&:first).size
+    missed_positions = positions.find_all(&:first).size - positions_taken.size
     correct_positions = positions_taken.find_all {|e| e.first == e.last }.size
     incorrect_positions = positions_taken.size - correct_positions
     accuracy = ((correct_positions.to_f/positions_taken.size) * 100)
