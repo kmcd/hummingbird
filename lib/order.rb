@@ -29,10 +29,6 @@ class Order
     ib_order.m_transmit = args[:transmit].nil? ? true : args[:transmit]
   end
   
-  def inspect
-    "#<#{self.class.to_s} #{info}>"
-  end
-  
   def place
     gateway.placeOrder order_id, contract, ib_order
   end
