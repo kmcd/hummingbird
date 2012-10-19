@@ -6,10 +6,6 @@ class BracketOrder
       position.size, ticker, gateway, current_ask
   end
   
-  def inspect
-    bracket_orders.map(&:inspect).join ' '
-  end
-  
   def place_orders
     return if shares < 1
     
