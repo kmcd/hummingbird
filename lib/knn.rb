@@ -40,10 +40,9 @@ class KNearestNeighbours
     sum_squares ** 0.5 if sum_squares
   end
   
-  # TODO: investigate guassian - could be sensitive to noise
   def inverse_weight(distance)
     (1.0 / ( distance + 0.1 )) / 10
-  end
+  end # TODO: investigate guassian - could be sensitive to noise
   
   def training_examples
     @training_examples ||= examples.

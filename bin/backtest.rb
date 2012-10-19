@@ -1,32 +1,27 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'hummingbird'
-require 'historic_data'
 
-# TODO: take index, components, day range from script args
-# TODO: load previously retrieved data from yaml
+# Usage ./bin/backtest.rb -index=QQQ, -components=AAPL,MSFT,GOOG,ORCL ...
+index = $index.upcase
+components = $components.split(',').map &:upcase
 
-def request_historic_data(days, previous)
-  ndx10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
+def request_historic_data(days, previous, tickers, wait=10)
   end_day = days.days.ago.end_of_day.strftime("%Y%m%d %H:%M:%S")
   
+  # TODO: load previously retrieved data from yaml
+  # data/qqq_2012_01_01.yml
   hd = HistoricData.new
-  hd.request 'SQQQ', end_day, previous
-  hd.request ndx10, end_day, previous
-  
-  print "Waiting for historic data "
-  while hd.historic_data.keys.size < ndx10.size + 1
-    print '.' ; sleep 1
-  end
-  puts
+  hd.request tickers, end_day, previous, wait
+  hd.disconnect
   hd
 end
 
-train = request_historic_data 2, 3
-knn = KNearestNeighbours.new Classifer.new('SQQQ', train.historic_data).
+train = request_historic_data 2, 3, components
+knn = KNearestNeighbours.new Classifer.new(index, train.historic_data).
   trained_examples
 
-test = request_historic_data 1, 1
-results = Classifer.new('SQQQ', test.historic_data).trained_examples
+test = request_historic_data 1, 1, index
+results = Classifer.new(index, test.historic_data).trained_examples
 
 positions = results.inject([]) do |positions, result|
   classification = result[:classification]
