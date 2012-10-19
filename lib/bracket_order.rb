@@ -16,7 +16,7 @@ class BracketOrder
       order(:type => 'LMT',     :price => profit_target(0.02), :activate_at => 56.seconds.from_now.ib_format),
       order(:type => 'STPLMT',  :price => stop_loss(0.02), :stop => stop_loss(0.02)),
       order(:type => 'STP',     :stop =>  stop_loss(0.03)),
-      order(:type => 'MKT',     :activate_at => 1.minute.from_now.ib_format, transmit => true),
+      order(:type => 'MKT',     :activate_at => 1.minute.from_now.ib_format, :transmit => true),
     ].each &:place
   end
   

@@ -37,7 +37,6 @@ class Order
   def place
     log :place
     gateway.placeOrder order_id, contract, ib_order
-    LiveOrder.create self
   end
   
   def cancel

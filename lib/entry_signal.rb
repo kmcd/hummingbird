@@ -1,4 +1,5 @@
 require 'knn'
+require 'classifer'
 
 class EntrySignal
   include Observable

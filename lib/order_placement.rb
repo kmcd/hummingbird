@@ -1,6 +1,5 @@
 require 'order'
 require 'bracket_order'
-require 'bracket_order_integrity'
 
 class OrderPlacement < Gateway
   attr_reader :ticker, :realtime_data
@@ -20,6 +19,5 @@ class OrderPlacement < Gateway
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,
       parentId, lastFillPrice, clientId, whyHeld)
-    BracketOrderIntegrity.new(order_id, status, filled, parentId).maintain
   end
 end

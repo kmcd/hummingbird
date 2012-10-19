@@ -9,8 +9,8 @@ class MarketData
   def_delegators :realtime, :realtime_data
   
   def initialize(tradeable, components)
-    historic.request tradeable
-    historic.request components
+    # historic.request tradeable
+    # historic.request components
     realtime.request tradeable
     realtime.request components
   end
