@@ -12,7 +12,7 @@ class BracketOrder
     [ entry_order,
       order(:type => 'LMT',     :price => profit_target(0.05)),
       order(:type => 'LMT',     :price => profit_target(0.04), :activate_at => 36.seconds.from_now.ib_format),
-      order(:type => 'LMT',     :price => profit_target(0.03), :activate_at => 52.seconds.from_now.ib_format),
+      order(:type => 'LMT',     :price => profit_target(0.03), :activate_at => 51.seconds.from_now.ib_format),
       order(:type => 'LMT',     :price => profit_target(0.02), :activate_at => 56.seconds.from_now.ib_format),
       order(:type => 'STPLMT',  :price => stop_loss(0.02), :stop => stop_loss(0.02)),
       order(:type => 'STP',     :stop =>  stop_loss(0.03)),

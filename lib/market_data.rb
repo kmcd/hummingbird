@@ -9,12 +9,8 @@ class MarketData
   def_delegators :realtime, :realtime_data
   
   def initialize(tradeable, components)
-    # historic.request tradeable
-    # historic.request components
-    # print "Waiting for historic data "
-    # while historic_data.keys.size < components.size + 1
-      # print '.' ; sleep 1
-    # end
+    historic.request tradeable
+    historic.request components
     realtime.request tradeable
     realtime.request components
   end

@@ -20,9 +20,6 @@ class OrderPlacement < Gateway
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,
       parentId, lastFillPrice, clientId, whyHeld)
-    
-    puts [order_id, status, filled, remaining, avgFillPrice, permId, parentId, lastFillPrice, clientId, whyHeld].join ' '
-    
     BracketOrderIntegrity.new(order_id, status, filled, parentId).maintain
   end
 end

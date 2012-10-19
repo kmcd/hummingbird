@@ -3,12 +3,11 @@ require 'market_data'
 require 'entry_signal'
 require 'position'
 require 'order_placement'
-NDX_10 = %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ]
 
 class Strategy
   attr_reader :market_data, :signal, :position, :order_placement
-  
-  def initialize(tradeable='SQQQ', components=NDX_10)
+    
+  def initialize(tradeable, components)
     @market_data = MarketData.new tradeable, components
     @signal = EntrySignal.new tradeable, market_data.historic_data
     @position = Position.new

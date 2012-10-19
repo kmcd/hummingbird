@@ -30,8 +30,8 @@ class Position < Gateway
   # TODO: move to account
   def updateAccountValue(key, value, currency, accountName)
     case key
-      when /(AvailableFunds)/i  ; self.account_balance  = value.to_f
-      when /(RealizedPNL)/i     ; self.profitability    = value.to_f
+      when /(availablefunds)/i  ; self.account_balance  = value.to_f
+      when /(realizedpnl)/i     ; self.profitability    = value.to_f
     end
   end
   

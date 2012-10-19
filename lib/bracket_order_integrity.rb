@@ -1,3 +1,4 @@
+# TODO: shouldnt need this now if parent_order_id works correctly
 class BracketOrderIntegrity
   attr_reader :order_id, :status, :filled, :parent_order_id
   

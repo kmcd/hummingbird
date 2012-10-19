@@ -1,5 +1,3 @@
-require 'classifer'
-
 class KNearestNeighbours
   attr_reader :examples, :neighbours
   
@@ -51,6 +49,6 @@ class KNearestNeighbours
   end
   
   def without_classification
-    lambda {|neighbours,v| neighbours != :classification }
+    lambda {|neighbours,_| neighbours != :classification }
   end # TODO: move to Example
 end
