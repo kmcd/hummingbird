@@ -2,6 +2,7 @@ require 'ib.client.jar'
 
 class IbGateway
   include com.ib.client.EWrapper
+  include Java::Runnable
   
   def client_socket
     @client_socket ||= com.ib.client.EClientSocket.new self

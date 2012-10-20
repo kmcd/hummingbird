@@ -1,3 +1,4 @@
+# TODO: move Gateway functionality to Account
 class Position < Gateway
   attr_accessor :entry, :account_balance, :profitability
   include Observable

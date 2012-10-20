@@ -1,3 +1,5 @@
+require 'order'
+
 class BracketOrder
   attr_reader :entry, :quantity, :ticker, :gateway, :current_ask
   

@@ -1,4 +1,3 @@
-require 'order'
 require 'bracket_order'
 
 class OrderPlacement < Gateway
@@ -19,5 +18,8 @@ class OrderPlacement < Gateway
   
   def orderStatus(order_id, status, filled, remaining, avgFillPrice, permId,
       parentId, lastFillPrice, clientId, whyHeld)
+  end
+  
+  def execDetails(request_id, contract, execution)
   end
 end
