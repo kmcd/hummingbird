@@ -2,7 +2,6 @@ require 'ib.client.jar'
 
 class IbGateway
   include com.ib.client.EWrapper
-  include Java::Runnable
   
   def client_socket
     @client_socket ||= com.ib.client.EClientSocket.new self
@@ -40,15 +39,14 @@ class IbGateway
   def deltaNeutralValidation(undercomp)
   end
   
-  java_signature 'public error(Exception e) { println e }'
-  def error(e)
-  end
-  
   # Conflict between error() with arity 1,3
   # java_signature 'public error(String str) { println str }'
   # java_signature 'public error(int id, int errorCode, String errorMsg){}'
   # def error(id, errorCode, errorMsg)
+  # java_signature 'public error(Exception e) { println e }'
+  # def error(e); end
   def error(*args)
+    # puts "Error #{args.inspect}"
   end
   
   java_signature 'public execDetails(int orderId, Contract contract, Execution execution) {}'
@@ -165,5 +163,9 @@ class IbGateway
   
   java_signature 'public updatePortfolio(Contract contract, int position, double marketPrice, double marketValue, double averageCost, double unrealizedPNL, double realizedPNL, String accountName) {}'
   def updatePortfolio(contract, position, marketPrice, marketValue, averageCost, unrealizedPNL, realizedPNL, accountName)
+  end
+  
+  java_signature 'void commissionReport(CommissionReport commission_report)'
+  def commissionReport(commission_report)
   end
 end
