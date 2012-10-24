@@ -10,20 +10,19 @@ class BracketOrder
   
   def place_orders
     return if shares < 1
-    
-    [ entry_order,
-      order(:type => 'LMT',     :price => profit_target(0.05)),
-      order(:type => 'LMT',     :price => profit_target(0.04), :activate_at => 36.seconds.from_now.ib_format),
-      order(:type => 'LMT',     :price => profit_target(0.03), :activate_at => 51.seconds.from_now.ib_format),
-      order(:type => 'LMT',     :price => profit_target(0.02), :activate_at => 56.seconds.from_now.ib_format),
-      order(:type => 'STPLMT',  :price => stop_loss(0.03), :stop => stop_loss(0.03)),
-      order(:type => 'STP',     :stop =>  stop_loss(0.04)),
-      order(:type => 'MKT',     :activate_at => 1.minute.from_now.ib_format, :transmit => true),
-    ].each &:place
+    orders.each &:place
   end
   
+  def orders
+    [ entry_order, exit_orders ].flatten
+  end
+
   def long?
     entry.to_s.match /long/i
+  end
+  
+  def find_order(order_id)
+    orders.find {|order| order.order_id == order_id }
   end
   
   def order(order_args={})
@@ -42,6 +41,18 @@ class BracketOrder
   def entry_order
     @entry_order ||= order :price => current_ask, :expire_at => 10.seconds.
       from_now.ib_format
+  end
+  
+  def exit_orders
+    @exit_orders ||= [ 
+      order(:type => 'LMT',     :price => profit_target(0.05)),
+      order(:type => 'LMT',     :price => profit_target(0.04), :activate_at => 36.seconds.from_now.ib_format),
+      order(:type => 'LMT',     :price => profit_target(0.03), :activate_at => 51.seconds.from_now.ib_format),
+      order(:type => 'LMT',     :price => profit_target(0.02), :activate_at => 56.seconds.from_now.ib_format),
+      order(:type => 'STPLMT',  :price => stop_loss(0.03), :stop => stop_loss(0.03)),
+      order(:type => 'STP',     :stop =>  stop_loss(0.04)),
+      order(:type => 'MKT',     :activate_at => 1.minute.from_now.ib_format, :transmit => true) 
+    ]
   end
   
   def oca_group

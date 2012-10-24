@@ -21,11 +21,11 @@ class Position < Gateway
   end
   
   def size
-    5_000 # fixed for evaluation
+    10_000 # fixed for evaluation
   end
   
   def daily_drawdown_tolerable?
-    profitability > -125
+    profitability > -(account_balance * 0.005)
   end
   
   def balance_sufficient_for_day_trading?

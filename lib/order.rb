@@ -1,5 +1,6 @@
 class Order
-  attr_reader :contract, :ib_id, :contract, :ib_order, :gateway
+  attr_reader :contract, :ib_id, :contract, :ib_order, :gateway, :order_id
+  attr_accessor :status
   
   def self.buy(args={})
     new args.merge!(:action => 'BUY')
@@ -13,6 +14,7 @@ class Order
     @gateway = args[:gateway]
     @contract = Stock.new(args[:ticker]).contract
     @ib_order = com.ib.client.Order.new
+    ib_order.m_orderId = next_order_id
     ib_order.m_clientId = gateway.client_id.to_i
     ib_order.m_action = args[:action]
     ib_order.m_totalQuantity = args[:quantity]
@@ -30,14 +32,27 @@ class Order
   end
   
   def place
+    puts "Creating order: #{order_id}"
     gateway.placeOrder order_id, contract, ib_order
   end
   
+  def next_order_id
+    Redis.new.incr :next_order_id
+  end
+  
   def order_id
-    @order_id ||= Redis.new.incr :next_order_id
+    ib_order.m_orderId
   end
   
   def entry_order_id
     ib_order.m_parentId
+  end
+  
+  def filled?
+    status =~ /filled/i
+  end
+  
+  def pending?
+    status =~ /submitted/i
   end
 end
