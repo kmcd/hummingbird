@@ -6,6 +6,7 @@ class Classifer
   
   def initialize(ticker, examples={})
     @training_examples = examples[ticker].clone
+    # FIXME: should be able to classify with ticker
     @examples = Hash[ examples.find_all {|example,_| example != ticker } ]
   end
   
