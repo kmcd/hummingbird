@@ -4,28 +4,32 @@ class Position < Gateway
   include Observable
   
   def initialize
-    super()
+    super() # FIXME: pass in a/c code from config & environment
     client_socket.reqAccountUpdates true, 'DU125081'
   end
   
   def update(signal)
     self.entry = signal.current
-    return unless entry && viable? && slot_available?
+    return unless entry && viable?
     log
     changed
     notify_observers self
   end
   
-  def slot_available?
-    # TODO: any live orders for this strategy?
-  end
-  
   def viable?
-    account_balance > 25000 && profitability > -200
+    balance_sufficient_for_day_trading? && daily_drawdown_tolerable?
   end
   
   def size
     5_000 # fixed for evaluation
+  end
+  
+  def daily_drawdown_tolerable?
+    profitability > -125
+  end
+  
+  def balance_sufficient_for_day_trading?
+    account_balance > 25000
   end
   
   # TODO: move to account
