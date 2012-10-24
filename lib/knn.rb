@@ -7,7 +7,12 @@ class KNearestNeighbours
   
   def classify(data_point)
     return if data_point.values.compact.empty?
-    weighted_distances(data_point).sort_by {|_,distance| distance }.last.first
+    return unless classifications = weighted_classifications(data_point)
+    classifications.first
+  end
+  
+  def weighted_classifications(data_point)
+    weighted_distances(data_point).sort_by {|_,distance| distance }.last
   end
   
   def weighted_distances(data_point)

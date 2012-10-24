@@ -21,7 +21,8 @@ class OrderPlacement < Gateway
   
   def slot_taken?
     return unless bracket_order
-    entry_order_filled? && exit_order_pending?
+    return if entry_order.pending?
+    entry_order.filled? && exit_order_pending?
   end
   
   def orderStatus(orderId, status, filled, remaining, avgFillPrice, permId, 
@@ -29,8 +30,8 @@ class OrderPlacement < Gateway
     update_order_status orderId, status
   end
   
-  def entry_order_filled?
-    bracket_order.entry_order.filled?
+  def entry_order
+    bracket_order.entry_order
   end
   
   def exit_order_pending?
