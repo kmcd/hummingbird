@@ -52,6 +52,6 @@ class Order
   end
   
   def pending?
-    status =~ /submitted/i
+    status =~ /(submitted|pendingsubmit)/i
   end
 end
