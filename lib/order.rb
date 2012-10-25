@@ -32,7 +32,6 @@ class Order
   end
   
   def place
-    puts "Creating order: #{order_id}"
     gateway.placeOrder order_id, contract, ib_order
   end
   
