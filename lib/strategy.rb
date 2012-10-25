@@ -43,7 +43,9 @@ class Strategy
     market_data
     print "Waiting for market data "
     until market_data.available?
-      print '.'
+      # print '.'
+      puts market_data.historic_data.keys.inspect
+      puts market_data.realtime_data.keys.inspect
       sleep 1
     end
     puts

@@ -20,8 +20,8 @@ class MarketData
   
   def realtime_polling(on=true)
     return scheduler.stop unless on
-    return unless all_data_available?
-    self.polling = scheduler.cron('* 14-21 * * 1-5') { publish }
+    return unless available?
+    self.polling = scheduler.every('60s', :first_at => market_open ) { publish }
   end
   
   def disconnect
@@ -41,11 +41,15 @@ class MarketData
     @scheduler ||= Rufus::Scheduler.start_new
   end
   
-  def all_data_available?
+  def available?
     ready?(historic_data) && ready?(realtime_data)
   end
   
   def ready?(data)
     data.keys.size == [tradeable, components].flatten.size
+  end
+  
+  def market_open
+    DateTime.parse "#{Date.today} 14:30:55"
   end
 end

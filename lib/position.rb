@@ -11,8 +11,10 @@ class Position < Gateway
   
   def update(signal)
     self.entry = signal.current
-    return unless entry && viable?
-    publish
+    if entry && viable?
+      puts "position: #{entry} a/c:#{account_balance.inspect} profitability: #{profitability}"
+      publish
+    end
   end
   
   def viable?
