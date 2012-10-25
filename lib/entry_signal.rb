@@ -14,8 +14,7 @@ class EntrySignal
   def update(market_data)
     self.current = knn.classify example_from(market_data)
     return unless current
-    changed
-    notify_observers self
+    publish
   end
   
   def example_from(market_data)

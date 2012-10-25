@@ -12,8 +12,7 @@ class Position < Gateway
   def update(signal)
     self.entry = signal.current
     return unless entry && viable?
-    changed
-    notify_observers self
+    publish
   end
   
   def viable?
