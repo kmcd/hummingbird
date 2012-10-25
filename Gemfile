@@ -10,6 +10,7 @@ group :development do
   gem 'awesome_print'
   gem 'wirble'
   gem 'ruby-debug'
+  gem 'rcov', '0.9.11'
 end
 
 group :test do
