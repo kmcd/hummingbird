@@ -11,7 +11,6 @@ class Position < Gateway
   def update(signal)
     self.entry = signal.current
     return unless entry && viable?
-    log
     changed
     notify_observers self
   end
@@ -32,19 +31,10 @@ class Position < Gateway
     account_balance > 25000
   end
   
-  # TODO: move to account
   def updateAccountValue(key, value, currency, accountName)
     case key
       when /(availablefunds)/i  ; self.account_balance  = value.to_f
       when /(realizedpnl)/i     ; self.profitability    = value.to_f
     end
-  end
-  
-  def log
-    logger.info "[POSITION] entry:#{entry} a/c:#{account_balance}, p+l: #{profitability}"
-  end
-  
-  def logger
-    @logger || Logger.new("./log/position_#{Date.today.to_s(:db)}.log")
-  end
+  end # TODO: move to Account (singleton)
 end

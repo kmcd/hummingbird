@@ -5,15 +5,28 @@ require 'position'
 require 'order_placement'
 
 class Strategy
-  attr_reader :market_data, :signal, :position, :order_placement
+  attr_reader :tradeable, :components
     
   def initialize(tradeable, components)
-    @market_data = MarketData.new tradeable, components
+    @tradeable, @components = tradeable, components
     ensure_market_data_available
-    @signal = EntrySignal.new tradeable, market_data.historic_data
-    @position = Position.new
-    @order_placement = OrderPlacement.new tradeable, market_data.realtime
     setup_queue_flow
+  end
+  
+  def market_data
+    @market_data ||= MarketData.new tradeable, components
+  end
+  
+  def signal
+    @signal ||= EntrySignal.new tradeable, market_data.historic_data
+  end
+  
+  def position
+    @position ||= Position.new
+  end
+  
+  def order_placement
+    @order_placement ||= OrderPlacement.new tradeable, market_data.realtime
   end
   
   def trade(start=true)
@@ -27,11 +40,10 @@ class Strategy
   end
   
   def ensure_market_data_available
+    market_data
     print "Waiting for market data "
     until market_data.available?
-      puts market_data.historic_data.keys.inspect
-      puts market_data.realtime_data.keys.inspect
-      # print '.'
+      print '.'
       sleep 1
     end
     puts

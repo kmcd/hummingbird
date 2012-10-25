@@ -16,7 +16,6 @@ class RealtimeData < Gateway
   
   def realtimeBar(reqId, time, open, high, low, close, volume, wap, count)
     time_stamp = Time.at(time).to_s :db
-    logger.info "[5s bar] #{time_stamp} #{tickers.at(reqId)}"
     
     realtime_data[tickers.at(reqId)].add({:open => open, :high => high,
       :low => low, :close => close, :volume => volume, 
@@ -30,8 +29,4 @@ class RealtimeData < Gateway
   def realtime_data
     @realtime_data ||= Hash.new {|h,k| h[k] = Deck.new(11) }
   end
-  
-  def logger
-    @logger || Logger.new("./log/realtime_data_#{Date.today.to_s(:db)}.log")
-  end # TODO: move to Loggable
 end
