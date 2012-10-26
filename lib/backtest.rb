@@ -12,20 +12,27 @@ class Backtest
     @test = HistoricData.request 1, 1, tickers
   end
   
+  def report
+    Report.new(positions).summary
+  end
+  
   def positions
-    @positions ||= begin
-      knn = KNearestNeighbours.new Classifer.new(index, train).trained_examples
-      test_set = Classifer.new(index, test).trained_examples
-      
-      test_set.inject([]) do |positions, bar|
-        example = Hash[ bar.find_all {|k,_| k != :classification } ]
-        positions << [ bar[:classification], knn.classify(example) ]
-      end
+    @positions ||= test_set.inject([]) do |positions, bar|
+      example = Hash[ bar.find_all {|k,_| k != :classification } ]
+      positions << [ bar[:classification], knn.classify(example) ]
     end
   end
   
-  def report
-    Report.new(positions).summary
+  def knn
+    KNearestNeighbours.new classify(train)
+  end
+  
+  def test_set
+    classify test
+  end
+  
+  def classify(examples)
+    Classifer.new(index, examples).trained_examples
   end
 end
 
