@@ -8,7 +8,7 @@ class KNearestNeighbours
   def classify(data_point)
     return if data_point.values.compact.empty?
     return unless classifications = weighted_classifications(data_point)
-    puts "[#{DateTime.now.to_s(:db)}] classification:#{classifications.inspect}"
+    # puts "[#{DateTime.now.to_s(:db)}] classification:#{classifications.inspect}"
     classifications.first
   end
   

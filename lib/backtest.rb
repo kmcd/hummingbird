@@ -8,42 +8,58 @@ class Backtest
   def initialize(index, components)
     @index, @components = index.upcase, components.map(&:upcase)
     tickers = [index,components].flatten
-    @train = request_historic_data 2, 3, tickers
-    @test = request_historic_data 1, 1, tickers
+    @train = HistoricData.request 2, 3, tickers
+    @test = HistoricData.request 1, 1, tickers
   end
   
-  def request_historic_data(days, previous, tickers, wait=10)
-    end_day = days.days.ago.end_of_day.strftime("%Y%m%d %H:%M:%S")
-    hd = HistoricData.new
-    hd.request tickers, end_day, previous, wait
-    hd.disconnect
-    hd.historic_data
-  end # TODO: load data from yaml/redis if available
-
   def positions
     @positions ||= begin
       knn = KNearestNeighbours.new Classifer.new(index, train).trained_examples
-      results = Classifer.new(index, test).trained_examples
+      test_set = Classifer.new(index, test).trained_examples
       
-      results.inject([]) do |positions, result|
-        classification = result[:classification]
-        example = Hash[ result.find_all {|k,_| k != :classification } ]
-        test_classification = knn.classify example
-        positions << [classification, test_classification]
+      test_set.inject([]) do |positions, bar|
+        example = Hash[ bar.find_all {|k,_| k != :classification } ]
+        positions << [ bar[:classification], knn.classify(example) ]
       end
     end
   end
   
   def report
-    positions_taken = positions.find_all &:last
-    missed_positions = positions.find_all(&:first).size - positions_taken.size
-    correct_positions = positions_taken.find_all {|e| e.first == e.last }.size
-    incorrect_positions = positions_taken.size - correct_positions
-    accuracy = ((correct_positions.to_f/positions_taken.size) * 100)
-    
+    Report.new(positions).summary
+  end
+end
+
+class Report
+  attr_reader :positions
+  
+  def initialize(positions)
+    @positions = positions
+  end
+  
+  def summary
     puts "Correct positions:   %s"    % correct_positions
     puts "Incorrect positions: %s"    % incorrect_positions
     puts "Missed positions:    %s"    % missed_positions
     puts "Accuracy:            %.2f%" % accuracy
+  end
+  
+  def positions_taken
+    positions.find_all &:last
+  end
+  
+  def missed_positions
+    positions.find_all(&:first).size - positions_taken.size
+  end
+  
+  def correct_positions
+    positions_taken.find_all {|e| e.first == e.last }.size
+  end
+  
+  def incorrect_positions
+    positions_taken.size - correct_positions
+  end
+  
+  def accuracy
+    ((correct_positions.to_f/positions_taken.size) * 100)
   end
 end

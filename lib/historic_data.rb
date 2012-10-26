@@ -5,6 +5,14 @@ class HistoricData < Gateway
   include Requestable
   def_delegators :client_socket, :reqHistoricalData
   
+  def self.request(days, previous, tickers, wait=10)
+    end_day = days.days.ago.end_of_day.strftime "%Y%m%d %H:%M:%S"
+    hd = new
+    hd.request tickers, end_day, previous, wait
+    hd.disconnect
+    hd.historic_data
+  end
+  
   def request(symbols, end_date=1.day.ago.end_of_day.
     strftime("%Y%m%d %H:%M:%S"), days=3, wait=0)
     [symbols].flatten.each do |ticker|
