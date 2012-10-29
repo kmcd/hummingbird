@@ -6,44 +6,36 @@ class Classifer
   
   def initialize(ticker, examples={})
     @training_examples = examples[ticker].clone
-    # FIXME: should be able to classify with ticker
     @examples = Hash[ examples.find_all {|example,_| example != ticker } ]
   end
   
   def trained_examples
-    @trained_examples ||= train_examples
+    @trained_examples ||= training_examples.each_cons(2).
+      inject([]) {|training, examples| training << trained(examples) }
   end
   
-  def train_examples # OPTIMIZE: takes 10 seconds
-    training_examples.inject([]) do |trained_examples, example|
-      trained_examples << {:classification => classify(example) }.
-        merge!(features(example))
-    end
+  def trained(examples)
+    current_bar, next_bar = *examples
+    time_stamp, ohlc = current_bar.first, next_bar.last
+    classification = Example.new(ohlc).classification
+    features(time_stamp).merge!( { :classification => classification } )
   end
   
-  def classify(example)
-    current_bar = example.last
-    time_stamp = (DateTime.parse(example.first) - 1.minute).to_s :db
-    previous_bar = training_examples[time_stamp]
-    Example.new(current_bar, previous_bar).classification
-  end # TODO: push down to Example.classify example.last, training_examples
-  
-  def features(example)
+  def features(time_stamp)
     examples.keys.inject({}) do |features,ticker|
-      features[ticker] = percent_change_close(ticker, example)
+      features[ticker] = percent_change(:close,  ticker, time_stamp)
       features
     end
   end
   
-  def percent_change_close(ticker, example)
-    current_time_stamp = example.first
-    previous_time_stamp = (DateTime.parse(current_time_stamp) - 1.minute).
-      to_s :db
-    return unless examples[ticker] && examples[ticker][previous_time_stamp]
-    
-    current   = examples[ticker][current_time_stamp][:close].to_s
-    previous  = examples[ticker][previous_time_stamp][:close].to_s
-    change    = ( BigDecimal.new(current) / BigDecimal.new(previous) ) - 1
+  def percent_change(ohlc, ticker, time_stamp)
+    ohlc_price  = price ticker, time_stamp, ohlc
+    open        = price ticker, time_stamp, :open
+    change      = ( ohlc_price / open  ) - 1
     change.nan? ? 0.0 : change.to_f
+  end
+  
+  def price(ticker, time_stamp, ohlc)
+    BigDecimal.new examples[ticker][time_stamp][ohlc].to_s
   end
 end

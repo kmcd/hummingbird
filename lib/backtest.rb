@@ -17,21 +17,25 @@ class Backtest
   end
   
   def positions
-    @positions ||= test_set.inject([]) do |positions, bar|
-      example = Hash[ bar.find_all {|k,_| k != :classification } ]
-      positions << [ bar[:classification], knn.classify(example) ]
+    test_set.each_cons(2).inject([]) do |positions, bars|
+      positions << [ bars.last[:classification], classify(bars.first) ]
     end
   end
   
+  def classify(bar)
+    example = Hash[ bar.find_all {|k,_| k != :classification } ]
+    knn.classify example
+  end
+  
   def knn
-    KNearestNeighbours.new classify(train)
+    KNearestNeighbours.new classified(train)
   end
   
   def test_set
-    classify test
+    classified test
   end
   
-  def classify(examples)
+  def classified(examples)
     Classifer.new(index, examples).trained_examples
   end
 end

@@ -7,9 +7,8 @@ class ExampleTest < Test::Unit::TestCase
     low   = args[:low]    || 0
     high  = args[:high]   || 0
     
-    Example.new(
-      {:close => 60.0+close, :low => 60.0+low, :high => 60.0+high},
-      {:close => 60.0, :low => 60.0, :high => 60.0} )
+    Example.new( { :open => 60.0,  :high => 60.0+high, :low => 60.0+low, 
+      :close => 60.0+close } )
   end
   
   def assert_classified(classification, args)

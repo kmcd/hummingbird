@@ -3,17 +3,15 @@ require 'classifer'
 
 class ClassiferTest < Test::Unit::TestCase
   def training_examples(close=0)
-    previous_bar, current_bar = '2012-01-01 09:30:00', '2012-01-01 09:31:00'
-    { 
-      'QQQ' => { 
-        previous_bar => {:close => 60.0, :low => 60.0, :high => 60.0},
-        current_bar  => {:close => 60.0+close, :low => 60.0, :high => 60.0 }
-      },
-      'AAPL' => {
-        previous_bar => {:close => 60.0, :low => 60.0, :high => 60.0},
-        current_bar  => {:close => 60.0+close, :low => 60.0, :high => 60.0 }
-      } 
-    }
+    %w[ AAPL QQQ ].inject({}) do |examples,ticker|
+      examples[ticker] = {
+        '2012-01-01 09:30:00' => {
+          :open => 60.0, :high => 60.0, :low => 60.0, :close => 60.0 },
+        '2012-01-01 09:31:00' => {
+          :open => 60.0, :high => 60.0, :low => 60.0, :close => 60.0+close }
+      }
+      examples
+    end
   end
   
   def trained_examples(close_change=0)
