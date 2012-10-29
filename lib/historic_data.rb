@@ -6,18 +6,20 @@ class HistoricData < Gateway
   def_delegators :client_socket, :reqHistoricalData
   
   def self.request(days, previous, tickers, wait=10)
-    end_day = days.days.ago.end_of_day.strftime "%Y%m%d %H:%M:%S"
     hd = new
-    hd.request tickers, end_day, previous, wait
+    hd.request tickers, days, previous, wait
     hd.disconnect
     hd.historic_data
   end
   
-  def request(symbols, end_date=1.day.ago.end_of_day.
-    strftime("%Y%m%d %H:%M:%S"), days=3, wait=0)
+  def request(symbols, end_date=1, days=3, wait=0, timeframe='1 min',
+    price='ASK')
+    formatted_end = end_date.day.ago.end_of_day.strftime "%Y%m%d %H:%M:%S"
+    lookback = days.is_a?(Numeric) ? "#{days.to_s} D" : days
+    
     [symbols].flatten.each do |ticker|
       reqHistoricalData ticker_id(ticker), Stock.new(ticker).contract, 
-        end_date, "#{days.to_s} D", '1 min', 'ASK', 1, 1
+        formatted_end, lookback, timeframe, price, 1, 1
       sleep wait
     end
   end
