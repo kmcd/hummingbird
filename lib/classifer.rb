@@ -10,13 +10,12 @@ class Classifer
   end
   
   def trained_examples
-    @trained_examples ||= training_examples.each_cons(2).
+    @trained_examples ||= training_examples.
       inject([]) {|training, examples| training << trained(examples) }
   end
   
-  def trained(examples)
-    current_bar, next_bar = *examples
-    time_stamp, ohlc = current_bar.first, next_bar.last
+  def trained(example)
+    time_stamp, ohlc = *example
     classification = Example.new(ohlc).classification
     features(time_stamp).merge!( { :classification => classification } )
   end
