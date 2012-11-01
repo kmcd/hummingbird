@@ -3,7 +3,7 @@ require 'hummingbird'
 require 'backtest'
 
 HOLDINGS = {
-  'GDX' => %w[ ABX GG NEM AUY SLW AU GOLD AEM KGC EGO GFI ],
+  'GDX' => %w[ ABX AEM AU AUY EGO GG GOLD KGC NEM SLW ],
   'QLD' => %w[ AAPL MSFT GOOG ORCL INTC AMZN QCOM CSCO CMCSA AMGN ],
   'SDS' => %w[ XLY XLP XLE XLF XLV XLI XLB XLK XLU ],
   'XLE' => %w[ XOM CVX SLB OXY COP NOV APC APA HAL EOG ],
