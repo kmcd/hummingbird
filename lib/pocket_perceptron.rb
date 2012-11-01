@@ -29,4 +29,9 @@ class PocketPerceptron < Perceptron
       error_rate += error
     end
   end
+  
+  def accuracy(training_set)
+    examples = training_set.size.to_f
+    (in_sample_error(training_set) / examples) * 100
+  end
 end

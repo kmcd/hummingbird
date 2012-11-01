@@ -22,9 +22,11 @@ CSV.foreach("data/gdx_06_04-07_2012.csv") do |ticker, timestamp, open, high, low
   if ticker == 'GDX'
     long = ( [close, open].map {|p| BigDecimal.new p }.reduce('-').
       to_f >= 0.05 ) ? 1 : 0
-    dataset[timestamp][-1] = long
+    previous_minute = (DateTime.parse(timestamp) - 1.minute).to_s :db
+    dataset[previous_minute][-1] = long unless previous_minute.match /09:29:59/
   else
-    (dataset[timestamp][0] << features(open, high, low, close)).flatten!
+    time = DateTime.parse(timestamp).to_s :db
+    (dataset[time][0] << features(open, high, low, close)).flatten!
   end
 end
 
