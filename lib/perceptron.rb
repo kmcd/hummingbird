@@ -1,10 +1,3 @@
-nand_training_set = [
-  [[1, 0, 0], 1], 
-  [[1, 0, 1], 1], 
-  [[1, 1, 0], 1], 
-  [[1, 1, 1], 0]
-]
-
 class Perceptron
   attr_reader :weights, :threshold, :learning_rate
   
@@ -19,18 +12,20 @@ class Perceptron
       
       training_set.each do |input_vector, desired_output|
         error = desired_output - result(input_vector, weights)
-        
-        if error != 0
-          error_count += 1
-          input_vector.each_with_index do |value, index|
-            weights[index] += learning_rate * error * value
-          end
-        end
+        next if error == 0
+        error_count += 1
+        update_weights input_vector, error
       end
+      
       break if error_count == 0
     end
-    
     weights
+  end
+  
+  def update_weights(input_vector, error)
+    input_vector.each_with_index do |value, index|
+      weights[index] += learning_rate * error * value
+    end
   end
   
   def result(input_vector, weights)
