@@ -11,7 +11,7 @@ class Perceptron
       error_count = 0
       
       training_set.each do |input_vector, desired_output|
-        error = desired_output - result(input_vector, weights)
+        error = desired_output - classify(input_vector, weights)
         next if error == 0
         error_count += 1
         update_weights input_vector, error
@@ -28,7 +28,7 @@ class Perceptron
     end
   end
   
-  def result(input_vector, weights)
+  def classify(input_vector, weights)
     sum(input_vector, weights) > threshold ? 1 : 0
   end
   
