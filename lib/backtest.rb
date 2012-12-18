@@ -9,7 +9,9 @@ class Backtest
     @index, @components = index.upcase, components.map(&:upcase)
     tickers = [index,components].flatten
     @train = HistoricData.request 2, 3, tickers
-    @test = HistoricData.request 1, 1, tickers
+    
+    @test = HistoricData.request DateTime.parse("2012-11-19 11:30"),
+      "7200 S", tickers, 0, '5 secs'
   end
   
   def report

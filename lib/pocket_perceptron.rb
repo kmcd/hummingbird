@@ -34,4 +34,11 @@ class PocketPerceptron < Perceptron
     examples = training_set.size.to_f
     (in_sample_error(training_set) / examples) * 100
   end
+  
+  def augmented_error(lambda=0.5)
+  end
+end
+
+classifications = train.map(&:last).map do |input_vector, desired_output|
+  [ desired_output, p2.classify(input_vector, p2.weights)]
 end
